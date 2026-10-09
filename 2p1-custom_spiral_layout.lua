@@ -59,7 +59,7 @@ function custom_spiral_layout.arrange(params)
     end
 
     if count == 1 then
-        set_geometry(geometries, clienIn the 5-window arrangement, the two bottom-right slots therefore hold the first two clients in that order.ts[1], area.x, area.y, area.width, area.height)
+        set_geometry(geometries, clients[1], area.x, area.y, area.width, area.height)
         return
     end
 
