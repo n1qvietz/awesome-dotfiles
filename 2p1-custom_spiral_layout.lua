@@ -131,4 +131,21 @@ return custom_spiral_layout
 --[[
 local spiral_floating = {}
 
+local creation_order = setmetatable({}, { __mode = "k" })
+local next_creation_order = 0
+
+client.connect_signal("manage", function(c)
+    next_creation_order = next_creation_order + 1
+    creation_order[c] = next_creation_order
+end)
+
+local function set_geometry(geometries, c, x, y, width, height)
+    geometries[c] = {
+        x = x,
+        y = y,
+        width = width,
+        height = height,
+    }
+end
+
 --]]
