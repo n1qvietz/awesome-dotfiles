@@ -1,6 +1,6 @@
 local beautiful = require("beautiful")
 local awful = require("awful")
-local spiral_floating = require("2p1-custom_spiral_layout") -- file:///home/nqvietz/.config/awesome/2p1-custom_spiral_layout.lua
+local spiral_floating = require("2p1-spiral_floating") -- file:///home/nqvietz/.config/awesome/2p1-spiral_floating.lua
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
