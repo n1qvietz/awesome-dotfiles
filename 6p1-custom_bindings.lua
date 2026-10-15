@@ -53,8 +53,7 @@ local customkeys = gears.table.join(
     end, { description = "open btop", group = "launcher" }),
 
     -- Client manipulation
-    awful.key({ modkey }, "q", function()
-        if client.focus then client.focus:kill() end
+    awful.key({ modkey }, "q", function() if client.focus then client.focus:kill() end
     end, { description = "close focused window", group = "client" }),
 
     -- Audio control
