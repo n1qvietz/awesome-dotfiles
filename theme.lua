@@ -53,10 +53,10 @@ end
 
 theme.font          = "Maple Mono NF CN 8"
 
-theme.bg_normal     = "#222222"
+theme.bg_normal     = theme.average_color(0.5) or "#222222"
 theme.bg_focus      = theme.average_color(1.2) or "#535d6c"
 theme.bg_urgent     = theme.average_color(1.2) or "#ff0000"
-theme.bg_minimize   = "#222222" or "#444444"
+theme.bg_minimize   = theme.bg_normal or "#444444"
 theme.bg_systray    = theme.bg_normal
 theme.hotkeys_bg    = theme.average_color(0.8) or "#535d6c"
 
