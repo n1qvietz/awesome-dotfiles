@@ -1,7 +1,3 @@
----------------------------
--- Default awesome theme --
----------------------------
-
 local theme_assets = require("beautiful.theme_assets")
 local xresources = require("beautiful.xresources")
 local dpi = xresources.apply_dpi
@@ -11,24 +7,70 @@ local themes_path = gfs.get_themes_dir()
 
 local theme = {}
 
-theme.font          = "sans 8"
+theme.wallpaper = os.getenv("HOME") .. "/Pictures/Wallpapers/Kamisato Ayaka.png"
+
+theme.average_color = function(multiplier)
+    multiplier = multiplier or 1.0
+    local pixbuf, err = require("lgi").GdkPixbuf.Pixbuf.new_from_file(theme.wallpaper)
+
+    if not pixbuf then
+        return nil, err or ("Unable to load wallpaper: " .. theme.wallpaper)
+    end
+
+    local width = pixbuf:get_width()
+    local height = pixbuf:get_height()
+    local channels = pixbuf:get_n_channels()
+    local rowstride = pixbuf:get_rowstride()
+    local pixels = pixbuf:get_pixels()
+
+    if width == 0 or height == 0 or not pixels then
+        return nil, "Wallpaper contains no pixels: " .. theme.wallpaper
+    end
+
+    local red, green, blue = 0, 0, 0
+
+    for y = 0, height - 1 do
+        local row = y * rowstride
+        for x = 0, width - 1 do
+            local pixel = row + x * channels
+            red = red + string.byte(pixels, pixel + 1)
+            green = green + string.byte(pixels, pixel + 2)
+            blue = blue + string.byte(pixels, pixel + 3)
+        end
+    end
+
+    local pixel_count = width * height
+    red = red * multiplier
+    green = green * multiplier
+    blue = blue * multiplier
+    return string.format(
+        "#%02x%02x%02x",
+        math.floor(red / pixel_count + 0.5),
+        math.floor(green / pixel_count + 0.5),
+        math.floor(blue / pixel_count + 0.5)
+    )
+end
+
+theme.font          = "Sans 8"
 
 theme.bg_normal     = "#222222"
-theme.bg_focus      = "#535d6c"
-theme.bg_urgent     = "#ff0000"
-theme.bg_minimize   = "#444444"
+theme.bg_focus      = theme.average_color(1.2) or "#535d6c"
+theme.bg_urgent     = theme.average_color(1.2) or "#ff0000"
+theme.bg_minimize   = "#222222" or "#444444"
 theme.bg_systray    = theme.bg_normal
+theme.hotkeys_bg    = theme.average_color(0.8) or "#535d6c"
 
 theme.fg_normal     = "#aaaaaa"
 theme.fg_focus      = "#ffffff"
 theme.fg_urgent     = "#ffffff"
 theme.fg_minimize   = "#ffffff"
+theme.hotkeys_modifiers_fg = theme.fg_focus
 
 theme.useless_gap   = dpi(0)
 theme.border_width  = dpi(1)
 theme.border_normal = "#000000"
 theme.border_focus  = "#535d6c"
-theme.border_marked = "#91231c"
+theme.border_marked = theme.average_color(1.2) or "#91231c"
 
 -- There are other variable sets
 -- overriding the default one when
@@ -41,7 +83,7 @@ theme.border_marked = "#91231c"
 -- prompt_[fg|bg|fg_cursor|bg_cursor|font]
 -- hotkeys_[bg|fg|border_width|border_color|shape|opacity|modifiers_fg|label_bg|label_fg|group_margin|font|description_font]
 -- Example:
---theme.taglist_bg_focus = "#ff0000"
+-- theme.taglist_bg_focus = "#ff0000"
 
 -- Generate taglist squares:
 local taglist_square_size = dpi(4)
@@ -68,54 +110,7 @@ theme.menu_width  = dpi(100)
 -- You can add as many variables as
 -- you wish and access them by using
 -- beautiful.variable in your rc.lua
---theme.bg_widget = "#cc0000"
-
--- Define the image to load
-theme.titlebar_close_button_normal = themes_path.."default/titlebar/close_normal.png"
-theme.titlebar_close_button_focus  = themes_path.."default/titlebar/close_focus.png"
-
-theme.titlebar_minimize_button_normal = themes_path.."default/titlebar/minimize_normal.png"
-theme.titlebar_minimize_button_focus  = themes_path.."default/titlebar/minimize_focus.png"
-
-theme.titlebar_ontop_button_normal_inactive = themes_path.."default/titlebar/ontop_normal_inactive.png"
-theme.titlebar_ontop_button_focus_inactive  = themes_path.."default/titlebar/ontop_focus_inactive.png"
-theme.titlebar_ontop_button_normal_active = themes_path.."default/titlebar/ontop_normal_active.png"
-theme.titlebar_ontop_button_focus_active  = themes_path.."default/titlebar/ontop_focus_active.png"
-
-theme.titlebar_sticky_button_normal_inactive = themes_path.."default/titlebar/sticky_normal_inactive.png"
-theme.titlebar_sticky_button_focus_inactive  = themes_path.."default/titlebar/sticky_focus_inactive.png"
-theme.titlebar_sticky_button_normal_active = themes_path.."default/titlebar/sticky_normal_active.png"
-theme.titlebar_sticky_button_focus_active  = themes_path.."default/titlebar/sticky_focus_active.png"
-
-theme.titlebar_floating_button_normal_inactive = themes_path.."default/titlebar/floating_normal_inactive.png"
-theme.titlebar_floating_button_focus_inactive  = themes_path.."default/titlebar/floating_focus_inactive.png"
-theme.titlebar_floating_button_normal_active = themes_path.."default/titlebar/floating_normal_active.png"
-theme.titlebar_floating_button_focus_active  = themes_path.."default/titlebar/floating_focus_active.png"
-
-theme.titlebar_maximized_button_normal_inactive = themes_path.."default/titlebar/maximized_normal_inactive.png"
-theme.titlebar_maximized_button_focus_inactive  = themes_path.."default/titlebar/maximized_focus_inactive.png"
-theme.titlebar_maximized_button_normal_active = themes_path.."default/titlebar/maximized_normal_active.png"
-theme.titlebar_maximized_button_focus_active  = themes_path.."default/titlebar/maximized_focus_active.png"
-
-theme.wallpaper = os.getenv("HOME") .. "/Pictures/Wallpapers/Kamisato Ayaka.png"
-
--- You can use your own layout icons like this:
-theme.layout_fairh = themes_path.."default/layouts/fairhw.png"
-theme.layout_fairv = themes_path.."default/layouts/fairvw.png"
-theme.layout_floating  = themes_path.."default/layouts/floatingw.png"
-theme.layout_magnifier = themes_path.."default/layouts/magnifierw.png"
-theme.layout_max = themes_path.."default/layouts/maxw.png"
-theme.layout_fullscreen = themes_path.."default/layouts/fullscreenw.png"
-theme.layout_tilebottom = themes_path.."default/layouts/tilebottomw.png"
-theme.layout_tileleft   = themes_path.."default/layouts/tileleftw.png"
-theme.layout_tile = themes_path.."default/layouts/tilew.png"
-theme.layout_tiletop = themes_path.."default/layouts/tiletopw.png"
-theme.layout_spiral  = themes_path.."default/layouts/spiralw.png"
-theme.layout_dwindle = themes_path.."default/layouts/dwindlew.png"
-theme.layout_cornernw = themes_path.."default/layouts/cornernww.png"
-theme.layout_cornerne = themes_path.."default/layouts/cornernew.png"
-theme.layout_cornersw = themes_path.."default/layouts/cornersww.png"
-theme.layout_cornerse = themes_path.."default/layouts/cornersew.png"
+-- theme.bg_widget = "#cc0000"
 
 -- Generate Awesome icon:
 theme.awesome_icon = theme_assets.awesome_icon(
