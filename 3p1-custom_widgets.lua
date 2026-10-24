@@ -1,7 +1,7 @@
 local awful = require("awful")
 local vicious = require("vicious")
 local wibox = require("wibox")
-local icons = require("4p2-custom_icons") -- file:///home/nqvietz/.config/awesome/4p2-custom_icons.lua
+local icons = require("3p2-custom_icons") -- file:///home/nqvietz/.config/awesome/3p2-custom_icons.lua
 
 local widgets = {}
 
@@ -140,3 +140,4 @@ return widgets, icons
 
 -- Remaining: clipboard, notification.
 -- Then need to change the icon of each widget based on its state.
+-- Finally, convert wibar to wibox instead.

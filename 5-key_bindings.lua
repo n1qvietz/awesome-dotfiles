@@ -2,7 +2,7 @@ local gears = require("gears")
 local awful = require("awful")
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup")
-local customkeys = require("6p1-custom_bindings")    -- file:///home/nqvietz/.config/awesome/6p1-custom_bindings.lua
+local customkeys = require("5p1-custom_bindings")    -- file:///home/nqvietz/.config/awesome/5p1-custom_bindings.lua
 
 -- {{{ Key bindings
 globalkeys = gears.table.join(

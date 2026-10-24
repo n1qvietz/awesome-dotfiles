@@ -2,9 +2,9 @@ local awful = require("awful")
 local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
-local widgets = require("4p1-custom_widgets")          -- file:///home/nqvietz/.config/awesome/4p1-custom_widgets.lua
-local icons = require("4p2-custom_icons")              -- file:///home/nqvietz/.config/awesome/4p2-custom_icons.lua
-local spiral_floating = require("4p3-spiral_floating") -- file:///home/nqvietz/.config/awesome/4p3-spiral_floating.lua
+local widgets = require("3p1-custom_widgets")          -- file:///home/nqvietz/.config/awesome/3p1-custom_widgets.lua
+local icons = require("3p2-custom_icons")              -- file:///home/nqvietz/.config/awesome/3p2-custom_icons.lua
+local spiral_floating = require("3p3-spiral_floating") -- file:///home/nqvietz/.config/awesome/3p3-spiral_floating.lua
                                                        -- Remember to replace in awful.tag layout with spiral_floating
 
 -- {{{ Wibar
