@@ -2,8 +2,10 @@ local awful = require("awful")
 local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
-local widgets = require("4p1-custom_widgets") -- file:///home/nqvietz/.config/awesome/4p1-custom_widgets.lua
-local icons = require("4p2-custom_icons")     -- file:///home/nqvietz/.config/awesome/4p2-custom_icons.lua
+local widgets = require("4p1-custom_widgets")          -- file:///home/nqvietz/.config/awesome/4p1-custom_widgets.lua
+local icons = require("4p2-custom_icons")              -- file:///home/nqvietz/.config/awesome/4p2-custom_icons.lua
+local spiral_floating = require("4p3-spiral_floating") -- file:///home/nqvietz/.config/awesome/4p3-spiral_floating.lua
+                                                       -- Remember to replace in awful.tag layout with spiral_floating
 
 -- {{{ Wibar
 -- Create a wibox for each screen and add it
@@ -68,7 +70,7 @@ awful.screen.connect_for_each_screen(function(s)
     set_wallpaper(s)
 
     -- Each screen has its own tag table.
-    awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
+    awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.suit.floating)
 
     -- Create a taglist widget
     s.mytaglist = awful.widget.taglist {

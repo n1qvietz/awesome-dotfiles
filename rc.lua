@@ -4,6 +4,8 @@ require("2-variable_definitions")  -- file:///home/nqvietz/.config/awesome/2-var
 require("3-menu")                  -- file:///home/nqvietz/.config/awesome/3-menu.lua
 require("4-wibar")                 -- file:///home/nqvietz/.config/awesome/4-wibar.lua
 --> require("4p1-custom_widgets")  -- file:///home/nqvietz/.config/awesome/4p1-custom_widgets.lua
+--> require("4p2-custom_icons")    -- file:///home/nqvietz/.config/awesome/4p2-custom_icons.lua
+--> require("4p3-spiral_floating") -- file:///home/nqvietz/.config/awesome/4p3-spiral_floating.lua
 require("5-mouse_bindings")        -- file:///home/nqvietz/.config/awesome/5-mouse_bindings.lua
 require("6-key_bindings")          -- file:///home/nqvietz/.config/awesome/6-key_bindings.lua
 --> require("6p1-custom_bindings") -- file:///home/nqvietz/.config/awesome/6p1-custom_bindings.lua

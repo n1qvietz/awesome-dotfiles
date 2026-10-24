@@ -1,6 +1,5 @@
 local beautiful = require("beautiful")
 local awful = require("awful")
-local spiral_floating = require("2p1-spiral_floating") -- file:///home/nqvietz/.config/awesome/2p1-spiral_floating.lua
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
@@ -18,8 +17,4 @@ editor_cmd = terminal .. " -e " .. editor
 -- However, you can use another modifier like Mod1, but it may interact with others.
 modkey = "Mod4"
 
--- Table of layouts to cover with awful.layout.inc, order matters.
-awful.layout.layouts = {
-    awful.layout.suit.floating,
-}
 -- }}}

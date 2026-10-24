@@ -7,7 +7,7 @@ local widgets = {}
 
 local function fix(usage, unit_level)
     usage = tonumber(usage) or 0
-    local units = {"B", "K", "M", "G", "T", "P", "E", "Z", "Y"}
+    local units = { "B", "K", "M", "G", "T", "P", "E", "Z", "Y" }
     while(usage >= 1024 and unit_level < #units) do
         usage = usage / 1024
         unit_level = unit_level + 1
@@ -59,7 +59,7 @@ vicious.register(
     vicious.widgets.net,
     function(_, data)
         return string.format(
-            " %s %s/s | %s %s/s",
+            " %s %s/s|%s %s/s",
             icons.net_up,
             fix(data["{wlan0 up_b}"], 0),
             icons.net_down,
@@ -117,21 +117,26 @@ widgets.brightwidget = awful.widget.watch(
 )
 
 -- Clock widget
-widgets.clockwidget = wibox.widget.textclock(" " .. icons.clock .. "%a %b %d, %H:%M:%S  ", 1)
+widgets.clockwidget = wibox.widget.textclock(" " .. icons.clock .. "%a %d %b, %H:%M:%S ", 1)
 
--- Music widget (using playerctl)
+-- Music widget
 widgets.musicwidget = awful.widget.watch(
-    "playerctl metadata --format '{{ artist }} - {{ title }}'",
+    "playerctl metadata --format '{{status}}|{{ artist }} - {{ title }}'",
     1,
     function(widget, stdout)
         local music_info = stdout:gsub("\n", "")
         if music_info == "" then
             widget:set_text(" " .. icons.music .. " No music playing ")
         else
-            widget:set_text(" " .. icons.music .. " " ..music_info .. " ")
+            widget:set_text(" " .. icons.music .. " " .. music_info .. " ")
         end
     end,
     wibox.widget.textbox()
 )
 
 return widgets, icons
+
+-- file:///home/nqvietz/.config/awesome/4-wibar.lua
+
+-- Remaining: clipboard, notification.
+-- Then need to change the icon of each widget based on its state.

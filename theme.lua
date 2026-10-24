@@ -51,7 +51,7 @@ theme.average_color = function(multiplier)
     )
 end
 
-theme.font          = "Sans 8"
+theme.font          = "Maple Mono NF CN 9"
 
 theme.bg_normal     = "#222222"
 theme.bg_focus      = theme.average_color(1.2) or "#535d6c"
