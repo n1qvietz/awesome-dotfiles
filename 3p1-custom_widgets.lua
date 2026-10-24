@@ -121,14 +121,14 @@ widgets.clockwidget = wibox.widget.textclock(" " .. icons.clock .. "%a %d %b, %H
 
 -- Music widget
 widgets.musicwidget = awful.widget.watch(
-    "playerctl metadata --format '{{status}}|{{ artist }} - {{ title }}'",
+    "playerctl metadata --format '{{status}}|{{ artist }} - {{ title }} '",
     1,
     function(widget, stdout)
         local music_info = stdout:gsub("\n", "")
         if music_info == "" then
-            widget:set_text(" " .. icons.music .. " No music playing ")
+            widget:set_text(" " .. icons.music .. "No music playing ")
         else
-            widget:set_text(" " .. icons.music .. " " .. music_info .. " ")
+            widget:set_text(" " .. icons.music .. music_info)
         end
     end,
     wibox.widget.textbox()
