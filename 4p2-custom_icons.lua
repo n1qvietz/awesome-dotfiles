@@ -9,7 +9,7 @@ local icons = {
     battery = "\xef\x89\x80  ",
     disk = "\xef\x88\xb3 ",
     bright = "\xef\x81\x82  ",
-    music = "\xef\x80\xb5  ",
+    music = "\xef\x80\xa5  ",
 }
 
 return icons
