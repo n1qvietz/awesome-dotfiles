@@ -38,7 +38,7 @@ widgets.cpuwidget = wibox.widget.textbox()
 vicious.register(
     widgets.cpuwidget,
     vicious.widgets.cpu,
-    " " .. icons.cpu .. " $1%",
+    " " .. icons.cpu .. "$1%",
     1
 )
 
