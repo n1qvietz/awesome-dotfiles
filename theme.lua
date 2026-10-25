@@ -23,7 +23,7 @@ theme.average_color = function(multiplier)
     local rowstride = pixbuf:get_rowstride()
     local pixels = pixbuf:get_pixels()
 
-    if width == 0 or height == 0 or not pixels then
+    if width * height == 0 or not pixels then
         return nil, "Wallpaper contains no pixels: " .. theme.wallpaper
     end
 

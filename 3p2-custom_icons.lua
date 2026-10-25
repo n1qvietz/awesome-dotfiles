@@ -10,6 +10,8 @@ local icons = {
     disk = "\xef\x88\xb3",
     bright = "\xef\x81\x82 ",
     music = "\xef\x80\xa5 ",
+    clipboard = "\xef\x83\x85 ",
+    notify = "\xef\x83\xb3 ",
 }
 
 return icons

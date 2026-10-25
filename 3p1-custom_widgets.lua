@@ -1,4 +1,6 @@
 local awful = require("awful")
+local gears = require("gears")
+local naughty = require("naughty")
 local vicious = require("vicious")
 local wibox = require("wibox")
 local icons = require("3p2-custom_icons") -- file:///home/nqvietz/.config/awesome/3p2-custom_icons.lua
@@ -121,23 +123,40 @@ widgets.clockwidget = wibox.widget.textclock(" " .. icons.clock .. "%a %d %b, %H
 
 -- Music widget
 widgets.musicwidget = awful.widget.watch(
-    "playerctl metadata --format '{{status}}|{{ artist }} - {{ title }} '",
+    "playerctl metadata --format '{{status}}|{{ artist }} - {{ title }}'",
     1,
     function(widget, stdout)
         local music_info = stdout:gsub("\n", "")
         if music_info == "" then
             widget:set_text(" " .. icons.music .. "No music playing ")
         else
-            widget:set_text(" " .. icons.music .. music_info)
+            widget:set_text(" " .. icons.music .. music_info:sub(1, 25) .. " ")
         end
     end,
     wibox.widget.textbox()
 )
 
+-- Clipboard widget
+widgets.clipwidget = awful.widget.watch(
+    "xclip -o -selection clipboard",
+    1,
+    function(widget, stdout)
+        local clipboard_content = stdout:gsub("\n", "")
+        if clipboard_content == "" then
+            widget:set_text(" " .. icons.clipboard .. "Clipboard empty ")
+        else
+            widget:set_text(" " .. icons.clipboard .. clipboard_content:sub(1, 25) .. " ")
+        end
+    end,
+    wibox.widget.textbox()
+)
+
+
 return widgets, icons
 
--- file:///home/nqvietz/.config/awesome/4-wibar.lua
+-- file:///home/nqvietz/.config/awesome/3-wibar.lua
 
--- Remaining: clipboard, notification.
+-- Remaining: notification widget.
 -- Then need to change the icon of each widget based on its state.
+-- Next, add the popup icons for each widgets.
 -- Finally, convert wibar to wibox instead.
