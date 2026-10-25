@@ -163,7 +163,7 @@ widgets.clockwidget = wibox.widget.textclock(" " .. icons.clock .. "%a %d %b, %H
 
 -- Music widget
 widgets.musicwidget = awful.widget.watch(
-    "playerctl metadata --format '{{status}}{{ artist }} - {{ title }}'",
+    "playerctl metadata --format '{{ status }}{{ artist }} - {{ title }}'",
     0.05,
     function(widget, stdout)
         local music_info = stdout:gsub("\n", "")
