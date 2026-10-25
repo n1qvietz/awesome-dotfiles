@@ -97,6 +97,7 @@ awful.screen.connect_for_each_screen(function(s)
             s.mytaglist,
             widgets.clipwidget,
             widgets.musicwidget,
+            widgets.testiconwidget,
         },
         s.mytasklist, -- Middle widget
         { -- Right widgets

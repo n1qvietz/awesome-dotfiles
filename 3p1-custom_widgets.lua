@@ -46,11 +46,26 @@ vicious.register(
 
 -- Battery widget
 widgets.batwidget = wibox.widget.textbox()
+widgets.batwidget:set_font(icon_font)
 vicious.register(
     widgets.batwidget,
     vicious.widgets.bat,
-    " " .. icons.battery .. "$2%",
-    10,
+    function(_, data)
+        local battery_icon = icons.battery_empty
+        if data[1] ~= "-" then
+            battery_icon = icons.battery_charging
+        elseif data[2] >= 80 then
+            battery_icon = icons.battery_full
+        elseif data[2] >= 60 then
+            battery_icon = icons.battery_3p4
+        elseif data[2] >= 40 then
+            battery_icon = icons.battery_half
+        elseif data[2] >= 20 then
+            battery_icon = icons.battery_1p4
+        end
+        return " " .. battery_icon .. data[2] .. "%"
+    end,
+    1,
     "BAT0"
 )
 
@@ -89,17 +104,20 @@ vicious.register(
 
 -- Volume widget
 widgets.volwidget = wibox.widget.textbox()
+widgets.volwidget:set_font(icon_font)
 vicious.register(
     widgets.volwidget,
     vicious.widgets.volume,
     function(_, data)
-        local volume = data[1]
-        local status = data[2]
-        if status == "🔈" or status == "♩" or status == "off" then
-            return " " .. icons.volume .. "Mute"
-        else
-            return " " .. icons.volume .. volume .. "%"
+        local volume_icon = icons.volume_mute
+        if data[2] == "🔈" then
+            return " " .. volume_icon .. "Mute"
+        elseif data[1] > 50 then
+            volume_icon = icons.volume_high
+        elseif data[1] > 0 then
+            volume_icon = icons.volume_low
         end
+        return " " .. volume_icon .. data[1] .. "%"
     end,
     0.05,
     "Master"
@@ -112,11 +130,15 @@ widgets.brightwidget = awful.widget.watch(
     function(widget, stdout)
         local brightness = stdout:match("^[^,]*,[^,]*,[^,]*,([^,]+)")
         if brightness then
-            widget:set_text(" " .. icons.bright .. brightness)
+            local brightness_value = tonumber(brightness:match("%d+"))
+            local brightness_icon = brightness_value and brightness_value >= 50 and
+                                    icons.brightness_high or icons.brightness_low
+            widget:set_text(" " .. brightness_icon .. brightness)
         end
     end,
     wibox.widget.textbox()
 )
+widgets.brightwidget:set_font(icon_font)
 
 -- Clock widget
 widgets.clockwidget = wibox.widget.textclock(" " .. icons.clock .. "%a %d %b, %H:%M:%S ", 1)
@@ -151,8 +173,11 @@ widgets.clipwidget = awful.widget.watch(
     wibox.widget.textbox()
 )
 
+-- Test icon widget
+local testicon = icons.brightness_low
+widgets.testiconwidget = wibox.widget.textbox("Test icon: " .. testicon .. " ")
 
-return widgets, icons
+return widgets
 
 -- file:///home/nqvietz/.config/awesome/3-wibar.lua
 
