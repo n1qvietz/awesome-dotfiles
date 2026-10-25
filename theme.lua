@@ -69,7 +69,7 @@ theme.hotkeys_modifiers_fg = theme.fg_focus
 theme.useless_gap   = dpi(0)
 theme.border_width  = dpi(1)
 theme.border_normal = "#000000"
-theme.border_focus  = "#535d6c"
+theme.border_focus  = theme.bg_focus or "#535d6c"
 theme.border_marked = theme.average_color(1.2) or "#91231c"
 
 -- There are other variable sets

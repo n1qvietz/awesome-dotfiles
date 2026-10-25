@@ -3,6 +3,7 @@ local gears = require("gears")
 local naughty = require("naughty")
 local vicious = require("vicious")
 local wibox = require("wibox")
+local beautiful = require("beautiful")
 local icons = require("3p2-custom_icons") -- file:///home/nqvietz/.config/awesome/3p2-custom_icons.lua
 
 local widgets = {}
@@ -17,6 +18,10 @@ local function fix(usage, unit_level)
     return string.format("%.1f%s", usage, units[unit_level + 1])
 end
 
+local function colored_icon(icon, color)
+    return string.format('<span foreground="%s">%s</span>', color, icon)
+end
+
 -- Ram usage widget
 widgets.memwidget = wibox.widget.textbox()
 vicious.cache(vicious.widgets.mem)
@@ -24,10 +29,12 @@ vicious.register(
     widgets.memwidget,
     vicious.widgets.mem,
     function(_, data)
+        local usage = tonumber(data[1]) or 0
+        local icon_color = usage >= 80 and "#ff0000" or beautiful.fg_normal
         return string.format(
             " %s %d%%(%s/%s)",
-            icons.memory,
-            data[1],
+            colored_icon(icons.memory, icon_color),
+            usage,
             fix(data[2], 2),
             fix(data[3], 2)
         )
@@ -40,7 +47,15 @@ widgets.cpuwidget = wibox.widget.textbox()
 vicious.register(
     widgets.cpuwidget,
     vicious.widgets.cpu,
-    " " .. icons.cpu .. "$1%",
+    function(_, data)
+        local usage = tonumber(data[1]) or 0
+        local icon_color = usage >= 80 and "#ff0000" or beautiful.fg_normal
+        return string.format(
+            " %s%d%%",
+            colored_icon(icons.cpu, icon_color),
+            usage
+        )
+    end,
     1
 )
 
@@ -52,18 +67,21 @@ vicious.register(
     vicious.widgets.bat,
     function(_, data)
         local battery_icon = icons.battery_empty
+        local battery_level = tonumber(data[2]) or 0
+        local icon_color = battery_level < 20 and "#ff0000" or beautiful.fg_normal
         if data[1] ~= "-" then
             battery_icon = icons.battery_charging
-        elseif data[2] >= 80 then
+            battery_icon = colored_icon(battery_icon, "#00ff00")
+        elseif battery_level >= 80 then
             battery_icon = icons.battery_full
-        elseif data[2] >= 60 then
+        elseif battery_level >= 60 then
             battery_icon = icons.battery_3p4
-        elseif data[2] >= 40 then
+        elseif battery_level >= 40 then
             battery_icon = icons.battery_half
-        elseif data[2] >= 20 then
+        elseif battery_level >= 20 then
             battery_icon = icons.battery_1p4
         end
-        return " " .. battery_icon .. data[2] .. "%"
+        return " " .. colored_icon(battery_icon, icon_color) .. battery_level .. "%"
     end,
     1,
     "BAT0"
@@ -92,10 +110,12 @@ vicious.register(
     widgets.diskwidget,
     vicious.widgets.fs,
     function(_, data)
+        local usage = tonumber(data["{/ used_p}"]) or 0
+        local icon_color = usage >= 80 and "#ff0000" or beautiful.fg_normal
         return string.format(
             " %s %s%%(%s)",
-            icons.disk,
-            data["{/ used_p}"],
+            colored_icon(icons.disk, icon_color),
+            usage,
             fix(data["{/ avail_mb}"], 2)
         )
     end,
@@ -104,7 +124,6 @@ vicious.register(
 
 -- Volume widget
 widgets.volwidget = wibox.widget.textbox()
-widgets.volwidget:set_font(icon_font)
 vicious.register(
     widgets.volwidget,
     vicious.widgets.volume,
@@ -138,21 +157,22 @@ widgets.brightwidget = awful.widget.watch(
     end,
     wibox.widget.textbox()
 )
-widgets.brightwidget:set_font(icon_font)
 
 -- Clock widget
 widgets.clockwidget = wibox.widget.textclock(" " .. icons.clock .. "%a %d %b, %H:%M:%S ", 1)
 
 -- Music widget
 widgets.musicwidget = awful.widget.watch(
-    "playerctl metadata --format '{{status}}|{{ artist }} - {{ title }}'",
-    1,
+    "playerctl metadata --format '{{status}}{{ artist }} - {{ title }}'",
+    0.05,
     function(widget, stdout)
         local music_info = stdout:gsub("\n", "")
         if music_info == "" then
             widget:set_text(" " .. icons.music .. "No music playing ")
+        elseif music_info:sub(1, 7) == "Playing" then
+            widget:set_text(" " .. icons.playing .. music_info:sub(7 + 1, 7 + 25) .. " ")
         else
-            widget:set_text(" " .. icons.music .. music_info:sub(1, 25) .. " ")
+            widget:set_text(" " .. icons.paused .. music_info:sub(6 + 1, 6 + 25) .. " ")
         end
     end,
     wibox.widget.textbox()
@@ -174,7 +194,7 @@ widgets.clipwidget = awful.widget.watch(
 )
 
 -- Test icon widget
-local testicon = icons.brightness_low
+local testicon = icons.playing -- Replace with the desired icon from the icons table
 widgets.testiconwidget = wibox.widget.textbox("Test icon: " .. testicon .. " ")
 
 return widgets
@@ -182,6 +202,5 @@ return widgets
 -- file:///home/nqvietz/.config/awesome/3-wibar.lua
 
 -- Remaining: notification widget.
--- Then need to change the icon of each widget based on its state.
--- Next, add the popup icons for each widgets.
--- Finally, convert wibar to wibox instead.
+-- Next, convert wibar to wibox instead.
+-- Final, add the popup icons for each widgets.

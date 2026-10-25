@@ -17,7 +17,9 @@ local icons = {
     disk = "\xef\x88\xb3",
     brightness_high = "\xef\x86\x85 ",
     brightness_low = "\xef\x86\x86 ",
-    music = "\xef\x80\xa5 ",
+    stop = "\xef\x80\xa5 ",
+    playing = "\xef\x85\x84 ",
+    paused = "\xef\x8a\x8b ",
     clipboard = "\xef\x83\x85 ",
     notify = "\xef\x83\xb3 ",
 }
