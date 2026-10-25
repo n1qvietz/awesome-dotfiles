@@ -167,12 +167,12 @@ widgets.musicwidget = awful.widget.watch(
     0.05,
     function(widget, stdout)
         local music_info = stdout:gsub("\n", "")
-        if music_info == "" then
-            widget:set_text(" " .. icons.music .. "No music playing ")
-        elseif music_info:sub(1, 7) == "Playing" then
+        if music_info:sub(1, 7) == "Playing" then
             widget:set_text(" " .. icons.playing .. music_info:sub(7 + 1, 7 + 25) .. " ")
-        else
+        elseif music_info:sub(1, 6) == "Paused" then
             widget:set_text(" " .. icons.paused .. music_info:sub(6 + 1, 6 + 25) .. " ")
+        else
+            widget:set_text(" " .. icons.music .. "No music playing ")
         end
     end,
     wibox.widget.textbox()
@@ -192,10 +192,6 @@ widgets.clipwidget = awful.widget.watch(
     end,
     wibox.widget.textbox()
 )
-
--- Test icon widget
-local testicon = icons.playing -- Replace with the desired icon from the icons table
-widgets.testiconwidget = wibox.widget.textbox("Test icon: " .. testicon .. " ")
 
 return widgets
 
