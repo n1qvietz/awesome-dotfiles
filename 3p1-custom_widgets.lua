@@ -22,6 +22,14 @@ local function colored_icon(icon, color)
     return string.format('<span foreground="%s">%s</span>', color, icon)
 end
 
+local function truncate(str, length)
+    if #str > length then
+        return str:sub(1, length - 4) .. " ..."
+    else
+        return str
+    end
+end
+
 -- Ram usage widget
 widgets.memwidget = wibox.widget.textbox()
 vicious.cache(vicious.widgets.mem)
@@ -168,9 +176,9 @@ widgets.musicwidget = awful.widget.watch(
     function(widget, stdout)
         local music_info = stdout:gsub("\n", "")
         if music_info:sub(1, 7) == "Playing" then
-            widget:set_text(" " .. icons.playing .. music_info:sub(7 + 1, 7 + 25) .. " ")
+            widget:set_text(" " .. icons.playing .. truncate(music_info:sub(7 + 1, #music_info), 25) .. " ")
         elseif music_info:sub(1, 6) == "Paused" then
-            widget:set_text(" " .. icons.paused .. music_info:sub(6 + 1, 6 + 25) .. " ")
+            widget:set_text(" " .. icons.paused .. truncate(music_info:sub(6 + 1, #music_info), 25) .. " ")
         else
             widget:set_text(" " .. icons.music .. "No music playing ")
         end
@@ -187,7 +195,7 @@ widgets.clipwidget = awful.widget.watch(
         if clipboard_content == "" then
             widget:set_text(" " .. icons.clipboard .. "Clipboard empty")
         else
-            widget:set_text(" " .. icons.clipboard .. clipboard_content:sub(1, 25))
+            widget:set_text(" " .. icons.clipboard .. truncate(clipboard_content, 25))
         end
     end,
     wibox.widget.textbox()
