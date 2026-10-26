@@ -185,9 +185,9 @@ widgets.clipwidget = awful.widget.watch(
     function(widget, stdout)
         local clipboard_content = stdout:gsub("\n", "")
         if clipboard_content == "" then
-            widget:set_text(" " .. icons.clipboard .. "Clipboard empty ")
+            widget:set_text(" " .. icons.clipboard .. "Clipboard empty")
         else
-            widget:set_text(" " .. icons.clipboard .. clipboard_content:sub(1, 25) .. " ")
+            widget:set_text(" " .. icons.clipboard .. clipboard_content:sub(1, 25))
         end
     end,
     wibox.widget.textbox()

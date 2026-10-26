@@ -41,8 +41,8 @@ local customkeys = gears.table.join(
     end, { description = "open Rofi run launcher", group = "launcher" }),
     awful.key({ modkey }, "c", function() awful.spawn("code")
     end, { description = "open VS Code", group = "launcher" }),
-    awful.key({ modkey }, "d", function() awful.spawn("vesktop")
-    end, { description = "open Vesktop", group = "launcher" }),
+    awful.key({ modkey }, "d", function() awful.spawn("discord")
+    end, { description = "open Discord", group = "launcher" }),
     awful.key({ modkey }, "t", function() awful.spawn("ghostty")
     end, { description = "open Ghostty", group = "launcher" }),
     awful.key({ modkey }, "b", function() awful.spawn("google-chrome-stable")
