@@ -205,10 +205,10 @@ widgets.musicwidget = awful.widget.watch(
         local music_text = ""
         if status == "Playing" then
             music_icon = colored_icon(icons.playing, "#00ff00")
-            music_text = string.format("%s %.0f%%", truncate(track_info), (tonumber(raw_volume) or 0) * 100)
+            music_text = string.format("%s %.0f%%", truncate(track_info), tonumber(raw_volume) * 100)
         elseif status == "Paused" then
             music_icon = colored_icon(icons.paused, "#ffff00")
-            music_text = string.format("%s %.0f%%", truncate(track_info), (tonumber(raw_volume) or 0) * 100)
+            music_text = string.format("%s %.0f%%", truncate(track_info), tonumber(raw_volume) * 100)
         else
             music_icon = colored_icon(icons.music, "#ff0000")
             music_text = "No music playing"
