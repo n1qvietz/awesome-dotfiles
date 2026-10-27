@@ -77,7 +77,7 @@ awful.screen.connect_for_each_screen(function(s)
     }
 
     -- Each screen has its own tag table.
-    awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.suit.tile)
+    awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.suit.fair)
 
     -- Create a taglist widget
     s.mytaglist = awful.widget.taglist {
@@ -104,7 +104,6 @@ awful.screen.connect_for_each_screen(function(s)
             s.mytaglist,
             widgets.clipwidget,
             widgets.musicwidget,
-            widgets.testiconwidget,
         },
         s.mytasklist, -- Middle widget
         { -- Right widgets
