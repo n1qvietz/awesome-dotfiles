@@ -196,18 +196,19 @@ widgets.clockwidget = wibox.widget.textclock(
 
 -- Music widget
 widgets.musicwidget = awful.widget.watch(
-    "playerctl metadata --format '{{ status }}{{ artist }} - {{ title }}'",
+    "playerctl metadata --player=spotify --format '{{ status }}|{{ volume }}|{{ artist }} - {{ title }}'",
     0.05,
     function(widget, stdout)
         local music_info = stdout:gsub("\n", "")
+        local status, raw_volume, track_info = music_info:match("^(.-)|(.-)|(.*)$")
         local music_icon = ""
         local music_text = ""
-        if music_info:sub(1, 7) == "Playing" then
+        if status == "Playing" then
             music_icon = colored_icon(icons.playing, "#00ff00")
-            music_text = truncate(music_info:sub(7 + 1, #music_info))
-        elseif music_info:sub(1, 6) == "Paused" then
+            music_text = string.format("%s %.0f%%", truncate(track_info), (tonumber(raw_volume) or 0) * 100)
+        elseif status == "Paused" then
             music_icon = colored_icon(icons.paused, "#ffff00")
-            music_text = truncate(music_info:sub(6 + 1, #music_info))
+            music_text = string.format("%s %.0f%%", truncate(track_info), (tonumber(raw_volume) or 0) * 100)
         else
             music_icon = colored_icon(icons.music, "#ff0000")
             music_text = "No music playing"
