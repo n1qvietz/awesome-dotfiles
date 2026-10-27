@@ -212,7 +212,7 @@ widgets.musicwidget = awful.widget.watch(
             music_icon = colored_icon(icons.music, "#ff0000")
             music_text = "No music playing"
         end
-        widget:set_markup(string.format(" %s%s", music_icon, music_text))
+        widget:set_markup(string.format(" %s%s ", music_icon, music_text))
     end,
     wibox.widget.textbox()
 )
