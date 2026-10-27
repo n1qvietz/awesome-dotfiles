@@ -61,9 +61,9 @@ local customkeys = gears.table.join(
             if tag then
                 for _, candidate in ipairs(awful.client.focus.history.list) do
                     if candidate ~= focused
-                    and candidate.valid
-                    and gears.table.hasitem(candidate:tags(), tag)
-                    and awful.client.focus.filter(candidate) then
+                        and candidate.valid
+                        and gears.table.hasitem(candidate:tags(), tag)
+                        and awful.client.focus.filter(candidate) then
                         previous = candidate
                         break
                     end
