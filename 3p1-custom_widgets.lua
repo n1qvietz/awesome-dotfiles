@@ -23,6 +23,7 @@ local function colored_icon(icon, color)
 end
 
 local function truncate(str, length)
+    length = tonumber(length) or 25
     if #str > length then
         return str:sub(1, length - 4) .. " ..."
     else
@@ -38,14 +39,18 @@ vicious.register(
     vicious.widgets.mem,
     function(_, data)
         local usage = tonumber(data[1]) or 0
-        local icon_color = usage >= 80 and "#ff0000" or beautiful.fg_normal
+        local ram_icon = ""
+        if usage >= 80 then
+            ram_icon = colored_icon(icons.memory, "#ff0000")
+        else
+            ram_icon = colored_icon(icons.memory, "#ffffff")
+        end
         return string.format(
             " %s %d%%(%s/%s)",
-            colored_icon(icons.memory, icon_color),
+            ram_icon,
             usage,
             fix(data[2], 2),
-            fix(data[3], 2)
-        )
+            fix(data[3], 2))
     end,
     1
 )
@@ -57,12 +62,13 @@ vicious.register(
     vicious.widgets.cpu,
     function(_, data)
         local usage = tonumber(data[1]) or 0
-        local icon_color = usage >= 80 and "#ff0000" or beautiful.fg_normal
-        return string.format(
-            " %s%d%%",
-            colored_icon(icons.cpu, icon_color),
-            usage
-        )
+        local cpu_icon = ""
+        if usage >= 80 then
+            cpu_icon = colored_icon(icons.cpu, "#ff0000")
+        else
+            cpu_icon = colored_icon(icons.cpu, "#ffffff")
+        end
+        return string.format(" %s%d%%", cpu_icon, usage)
     end,
     1
 )
@@ -74,22 +80,22 @@ vicious.register(
     widgets.batwidget,
     vicious.widgets.bat,
     function(_, data)
-        local battery_icon = icons.battery_empty
+        local battery_icon = ""
         local battery_level = tonumber(data[2]) or 0
-        local icon_color = battery_level < 20 and "#ff0000" or beautiful.fg_normal
         if data[1] ~= "-" then
-            battery_icon = icons.battery_charging
-            battery_icon = colored_icon(battery_icon, "#00ff00")
+            battery_icon = colored_icon(icons.battery_charging, "#00ff00")
         elseif battery_level >= 80 then
-            battery_icon = icons.battery_full
+            battery_icon = colored_icon(icons.battery_full, "#00ff00")
         elseif battery_level >= 60 then
-            battery_icon = icons.battery_3p4
+            battery_icon = colored_icon(icons.battery_3p4, "#00ff00")
         elseif battery_level >= 40 then
-            battery_icon = icons.battery_half
+            battery_icon = colored_icon(icons.battery_half, "#ffff00")
         elseif battery_level >= 20 then
-            battery_icon = icons.battery_1p4
+            battery_icon = colored_icon(icons.battery_1p4, "#ffff00")
+        else
+            battery_icon = colored_icon(icons.battery_empty, "#ff0000")
         end
-        return " " .. colored_icon(battery_icon, icon_color) .. battery_level .. "%"
+        return string.format(" %s%d%%", battery_icon, battery_level)
     end,
     1,
     "BAT0"
@@ -101,11 +107,13 @@ vicious.register(
     widgets.netwidget,
     vicious.widgets.net,
     function(_, data)
+        local up_icon = colored_icon(icons.net_up, "#00ff00")
+        local down_icon = colored_icon(icons.net_down, "#ff0000")
         return string.format(
             " %s %s/s|%s %s/s",
-            icons.net_up,
+            up_icon,
             fix(data["{wlan0 up_b}"], 0),
-            icons.net_down,
+            down_icon,
             fix(data["{wlan0 down_b}"], 0)
         )
     end,
@@ -119,10 +127,15 @@ vicious.register(
     vicious.widgets.fs,
     function(_, data)
         local usage = tonumber(data["{/ used_p}"]) or 0
-        local icon_color = usage >= 80 and "#ff0000" or beautiful.fg_normal
+        local disk_icon = ""
+        if usage >= 80 then
+            disk_icon = colored_icon(icons.disk, "#ff0000")
+        else
+            disk_icon = colored_icon(icons.disk, "#ffffff")
+        end
         return string.format(
             " %s %s%%(%s)",
-            colored_icon(icons.disk, icon_color),
+            disk_icon,
             usage,
             fix(data["{/ avail_mb}"], 2)
         )
@@ -136,15 +149,17 @@ vicious.register(
     widgets.volwidget,
     vicious.widgets.volume,
     function(_, data)
-        local volume_icon = icons.volume_mute
-        if data[2] == "🔈" then
-            return " " .. volume_icon .. "Mute"
+        local volume_icon = ""
+        local muted = data[2] == "🔈" or data[1] == 0
+        local volume = muted and "Mute" or data[1] .. "%"
+        if muted then
+            volume_icon = colored_icon(icons.volume_mute, "#ff0000")
         elseif data[1] > 50 then
-            volume_icon = icons.volume_high
-        elseif data[1] > 0 then
-            volume_icon = icons.volume_low
+            volume_icon = colored_icon(icons.volume_high, "#00ff00")
+        else
+            volume_icon = colored_icon(icons.volume_low, "#00ff00")
         end
-        return " " .. volume_icon .. data[1] .. "%"
+        return string.format(" %s%s", volume_icon, volume)
     end,
     0.05,
     "Master"
@@ -156,18 +171,28 @@ widgets.brightwidget = awful.widget.watch(
     0.05,
     function(widget, stdout)
         local brightness = stdout:match("^[^,]*,[^,]*,[^,]*,([^,]+)")
-        if brightness then
-            local brightness_value = tonumber(brightness:match("%d+"))
-            local brightness_icon = brightness_value and brightness_value >= 50 and
-                                    icons.brightness_high or icons.brightness_low
-            widget:set_text(" " .. brightness_icon .. brightness)
+        local brightness_icon = ""
+        if brightness and tonumber(brightness:match("%d+")) then
+            if tonumber(brightness:match("%d+")) >= 50 then
+                brightness_icon = colored_icon(icons.brightness_high, "#ffff00")
+            else
+                brightness_icon = colored_icon(icons.brightness_low, "#ffffff")
+            end
+            widget:set_markup(string.format(" %s%s", brightness_icon, brightness))
         end
     end,
     wibox.widget.textbox()
 )
 
 -- Clock widget
-widgets.clockwidget = wibox.widget.textclock(" " .. icons.clock .. "%a %d %b, %H:%M:%S ", 1)
+widgets.clockwidget = wibox.widget.textclock(
+    string.format(
+        " %s%s",
+        colored_icon(icons.clock, "#ff0000"),
+        "%a %d %b, %H:%M:%S "
+    ),
+    1
+)
 
 -- Music widget
 widgets.musicwidget = awful.widget.watch(
@@ -175,13 +200,19 @@ widgets.musicwidget = awful.widget.watch(
     0.05,
     function(widget, stdout)
         local music_info = stdout:gsub("\n", "")
+        local music_icon = ""
+        local music_text = ""
         if music_info:sub(1, 7) == "Playing" then
-            widget:set_text(" " .. icons.playing .. truncate(music_info:sub(7 + 1, #music_info), 25) .. " ")
+            music_icon = colored_icon(icons.playing, "#00ff00")
+            music_text = truncate(music_info:sub(7 + 1, #music_info))
         elseif music_info:sub(1, 6) == "Paused" then
-            widget:set_text(" " .. icons.paused .. truncate(music_info:sub(6 + 1, #music_info), 25) .. " ")
+            music_icon = colored_icon(icons.paused, "#ffff00")
+            music_text = truncate(music_info:sub(6 + 1, #music_info))
         else
-            widget:set_text(" " .. icons.music .. "No music playing ")
+            music_icon = colored_icon(icons.music, "#ff0000")
+            music_text = "No music playing"
         end
+        widget:set_markup(string.format(" %s%s", music_icon, music_text))
     end,
     wibox.widget.textbox()
 )
@@ -192,11 +223,15 @@ widgets.clipwidget = awful.widget.watch(
     1,
     function(widget, stdout)
         local clipboard_content = stdout:gsub("\n", "")
+        local clipboard_icon = ""
         if clipboard_content == "" then
-            widget:set_text(" " .. icons.clipboard .. "Clipboard empty")
+            clipboard_icon = colored_icon(icons.clipboard, "#ffffff")
+            clipboard_content = "Clipboard empty"
         else
-            widget:set_text(" " .. icons.clipboard .. truncate(clipboard_content, 25))
+            clipboard_icon = colored_icon(icons.clipboard, "#ffff00")
+            clipboard_content = truncate(clipboard_content)
         end
+        widget:set_markup(string.format(" %s%s", clipboard_icon, clipboard_content))
     end,
     wibox.widget.textbox()
 )

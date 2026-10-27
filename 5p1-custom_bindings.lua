@@ -59,10 +59,12 @@ local customkeys = gears.table.join(
     -- Audio control
     awful.key({ }, "XF86AudioMute", function() awful.spawn("amixer set Master toggle")
     end, { description = "mute/unmute volume", group = "audio" }),
-    awful.key({ }, "XF86AudioLowerVolume", function() awful.spawn("amixer set Master 5%-")
-    end, { description = "lower volume", group = "audio" }),
-    awful.key({ }, "XF86AudioRaiseVolume", function() awful.spawn("amixer set Master 5%+")
-    end, { description = "raise volume", group = "audio" }),
+    awful.key({ }, "XF86AudioLowerVolume", function() awful.spawn.with_shell(
+        "amixer set Master 5%- && amixer set Master unmute"
+    ) end, { description = "lower volume", group = "audio" }),
+    awful.key({ }, "XF86AudioRaiseVolume", function() awful.spawn.with_shell(
+        "amixer set Master 5%+ && amixer set Master unmute"
+    ) end, { description = "raise volume", group = "audio" }),
 
     -- Brightness control
     awful.key({ }, "XF86MonBrightnessUp", function() awful.spawn("brightnessctl set +5%")
@@ -70,12 +72,12 @@ local customkeys = gears.table.join(
     awful.key({ }, "XF86MonBrightnessDown", function() awful.spawn("brightnessctl set 5%-")
     end, { description = "decrease brightness", group = "brightness" }),
 
-    -- Media control
-    awful.key({ }, "XF86AudioPlay", function() awful.spawn("playerctl play-pause")
+    -- Media control (currently supports Spotify only)
+    awful.key({ }, "XF86AudioPlay", function() awful.spawn("playerctl --player=spotify play-pause")
     end, { description = "play/pause music", group = "audio" }),
-    awful.key({ "Control" }, "XF86AudioRaiseVolume", function() awful.spawn("playerctl volume 0.05+")
+    awful.key({ "Control" }, "XF86AudioRaiseVolume", function() awful.spawn("playerctl --player=spotify volume 0.05+")
     end, { description = "increase media player volume", group = "audio" }),
-    awful.key({ "Control" }, "XF86AudioLowerVolume", function() awful.spawn("playerctl volume 0.05-")
+    awful.key({ "Control" }, "XF86AudioLowerVolume", function() awful.spawn("playerctl --player=spotify volume 0.05-")
     end, { description = "decrease media player volume", group = "audio" }),
 
     -- Screenshot
