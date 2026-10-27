@@ -237,6 +237,34 @@ widgets.clipwidget = awful.widget.watch(
     wibox.widget.textbox()
 )
 
+-- Focusing widget
+local focus_icon = wibox.widget.imagebox()
+local focus_text = wibox.widget.textbox()
+widgets.focuswidget = wibox.layout.fixed.horizontal()
+widgets.focuswidget:add(focus_icon)
+widgets.focuswidget:add(focus_text)
+
+local function update_focus_widget()
+    local focused = client.focus
+    if not focused then
+        focus_icon.visible = false
+        focus_text:set_markup("")
+        return
+    end
+    local client_title = focused.name
+    focus_icon:set_image(focused.icon and focused.icon or " • ")
+    focus_icon.visible = focused.icon ~= nil
+    focus_text:set_markup(string.format(
+        " %s ",
+        gears.string.xml_escape(client_title)
+    ))
+end
+
+client.connect_signal("focus", update_focus_widget)
+client.connect_signal("unfocus", update_focus_widget)
+client.connect_signal("property::name", update_focus_widget)
+update_focus_widget()
+
 return widgets
 
 -- file:///home/nqvietz/.config/awesome/3-wibar.lua

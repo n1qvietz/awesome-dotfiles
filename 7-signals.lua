@@ -12,14 +12,15 @@ local function remove_from_history(history, c)
     end
 end
 
-local function focus_last_client(t)
+local function focus_last_client(t, excluded)
     if not t.selected then
         return
     end
 
     local candidate
     for _, c in ipairs(focus_history_by_tag[t] or {}) do
-        if c.valid
+        if c ~= excluded
+            and c.valid
             and not c.hidden
             and not c.minimized
             and awful.client.focus.filter(c)
@@ -31,7 +32,7 @@ local function focus_last_client(t)
 
     if not candidate then
         for _, c in ipairs(t:clients()) do
-            if c.valid and awful.client.focus.filter(c) then
+            if c ~= excluded and c.valid and awful.client.focus.filter(c) then
                 candidate = c
                 break
             end
@@ -77,7 +78,44 @@ client.connect_signal("focus", function(c)
         table.insert(focus_history_by_tag[t], 1, c)
     end
 end)
-client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+client.connect_signal("unfocus", function(c)
+    c.border_color = beautiful.border_normal
+    local screen = c.screen
+    gears.timer.delayed_call(function()
+        if not client.focus and screen and screen.selected_tag then
+            focus_last_client(screen.selected_tag, c)
+        end
+    end)
+end)
+
+client.connect_signal("property::minimized", function(c)
+    if c.minimized then
+        c.minimized = false
+        c:emit_signal("request::activate", "minimize_rejected", {raise = true})
+    end
+end)
+
+client.connect_signal("property::maximized", function(c)
+    if not c.valid or not c.maximized then
+        return
+    end
+
+    for _, t in ipairs(c:tags()) do
+        local maximized_clients = {}
+        for _, tagged_client in ipairs(t:clients()) do
+            if tagged_client.valid and tagged_client.maximized then
+                table.insert(maximized_clients, tagged_client)
+            end
+        end
+
+        if #maximized_clients >= 2 then
+            for _, maximized_client in ipairs(maximized_clients) do
+                maximized_client.maximized = false
+            end
+            return
+        end
+    end
+end)
 
 tag.connect_signal("property::selected", function(t)
     focus_last_client(t)
