@@ -6,12 +6,13 @@ local naughty = require("naughty")
 local function take_screenshot(opts)
     opts = opts or {}
     local dir = os.getenv("HOME") .. "/Pictures/Screenshots"
+    local prefix = opts.prefix or "Screenshot from "
+    local date_format = opts.date_format or "%Y-%m-%d %H-%M-%S"
     gears.filesystem.make_directories(dir)
 
     local ss = awful.screenshot({
         directory   = dir,
-        prefix      = opts.prefix or "Screenshot from ",
-        date_format = opts.date_format or "%Y-%m-%d %H-%M-%S",
+        file_path   = dir .. "/" .. prefix .. os.date(date_format) .. ".png",
         client      = opts.client,
         interactive = opts.interactive,
     })
@@ -53,11 +54,7 @@ local customkeys = gears.table.join(
     end, { description = "open btop", group = "launcher" }),
 
     -- Client manipulation
-    awful.key({ modkey }, "q", function()
-        local focused = client.focus
-        if focused then
-            focused:kill()
-        end
+    awful.key({ modkey }, "q", function() if client.focus then client.focus:kill() end
     end, { description = "close focused window", group = "client" }),
 
     -- Audio control
