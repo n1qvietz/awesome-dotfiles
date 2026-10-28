@@ -31,17 +31,6 @@ local function truncate(str, length)
     end
 end
 
-local function launcher_widget(command, label, icon)
-    local widget = wibox.widget.textbox()
-    widget:set_markup(string.format(" %s%s ", icon or "", label))
-    widget:buttons(gears.table.join(
-        awful.button({}, 1, function()
-            awful.spawn(command)
-        end)
-    ))
-    return widget
-end
-
 -- Ram usage widget
 widgets.memwidget = wibox.widget.textbox()
 vicious.cache(vicious.widgets.mem)
