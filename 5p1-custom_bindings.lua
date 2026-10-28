@@ -78,7 +78,7 @@ local customkeys = gears.table.join(
     awful.key({ "Control" }, "XF86MonBrightnessUp", function() awful.spawn("redshift -x")
     end, { description = "disable night mode", group = "brightness" }),
     awful.key({ "Control" }, "XF86MonBrightnessDown", function() awful.spawn.with_shell(
-        "redshift -x && redshift -O 3500K"
+        "redshift -x && redshift -O 3000K"
     ) end, { description = "enable night mode", group = "brightness" }),
 
     -- Media control (currently supports Spotify only)
