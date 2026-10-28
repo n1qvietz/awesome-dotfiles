@@ -270,5 +270,4 @@ return widgets
 -- file:///home/nqvietz/.config/awesome/3-wibar.lua
 
 -- Remaining: notification widget.
--- Next, convert wibar to wibox instead.
 -- Final, add the popup icons for each widgets.
