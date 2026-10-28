@@ -56,31 +56,7 @@ local customkeys = gears.table.join(
     awful.key({ modkey }, "q", function()
         local focused = client.focus
         if focused then
-            local tag = focused:tags()[1]
-            local previous
-            if tag then
-                for _, candidate in ipairs(awful.client.focus.history.list) do
-                    if candidate ~= focused
-                        and candidate.valid
-                        and gears.table.hasitem(candidate:tags(), tag)
-                        and awful.client.focus.filter(candidate) then
-                        previous = candidate
-                        break
-                    end
-                end
-            end
             focused:kill()
-            if previous then
-                gears.timer.delayed_call(function()
-                    if previous.valid and previous:isvisible() then
-                        previous:emit_signal(
-                            "request::activate",
-                            "close_client",
-                            {raise = true}
-                        )
-                    end
-                end)
-            end
         end
     end, { description = "close focused window", group = "client" }),
 
