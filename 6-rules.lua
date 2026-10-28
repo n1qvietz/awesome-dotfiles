@@ -1,5 +1,10 @@
 local awful = require("awful")
 local beautiful = require("beautiful")
+local gears = require("gears")
+
+local client_shape = function(cr, width, height)
+    gears.shape.rounded_rect(cr, width, height, 12)
+end
 
 -- {{{ Rules
 -- Rules to apply to new clients (through the "manage" signal).
@@ -8,6 +13,7 @@ awful.rules.rules = {
     { rule = { },
       properties = { border_width = beautiful.border_width,
                      border_color = beautiful.border_normal,
+                     shape = client_shape,
                      focus = awful.client.focus.filter,
                      raise = true,
                      keys = clientkeys,

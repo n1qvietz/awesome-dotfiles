@@ -31,6 +31,17 @@ local function truncate(str, length)
     end
 end
 
+local function launcher_widget(command, label, icon)
+    local widget = wibox.widget.textbox()
+    widget:set_markup(string.format(" %s%s ", icon or "", label))
+    widget:buttons(gears.table.join(
+        awful.button({}, 1, function()
+            awful.spawn(command)
+        end)
+    ))
+    return widget
+end
+
 -- Ram usage widget
 widgets.memwidget = wibox.widget.textbox()
 vicious.cache(vicious.widgets.mem)
@@ -270,4 +281,4 @@ return widgets
 -- file:///home/nqvietz/.config/awesome/3-wibar.lua
 
 -- Remaining: notification widget.
--- Final, add the popup icons for each widgets.
+-- Add the popup widget for each widget.

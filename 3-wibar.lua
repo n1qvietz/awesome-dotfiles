@@ -46,10 +46,10 @@ awful.screen.connect_for_each_screen(function(s)
     set_wallpaper(s)
 
     s.padding = {
-        top = dpi(4),
-        right = dpi(4),
-        bottom = dpi(4),
-        left = dpi(4),
+        top = dpi(2),
+        right = dpi(2),
+        bottom = dpi(2),
+        left = dpi(2),
     }
 
     -- Each screen has its own tag table.

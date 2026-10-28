@@ -67,7 +67,7 @@ theme.fg_minimize   = "#ffffff"
 theme.hotkeys_modifiers_fg = theme.fg_focus
 
 theme.useless_gap   = dpi(2)
-theme.border_width  = dpi(1)
+theme.border_width  = dpi(2)
 theme.border_normal = theme.average_color(0.8) or "#000000"
 theme.border_focus  = theme.bg_focus or "#535d6c"
 theme.border_marked = theme.average_color(1.2) or "#91231c"

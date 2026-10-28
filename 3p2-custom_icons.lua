@@ -21,6 +21,7 @@ local icons = {
     playing = "\xef\x85\x84 ",
     paused = "\xef\x8a\x8b ",
     clipboard = "\xef\x83\x85 ",
+    terminal = "\xef\x84\xa0 ",
     notify = "\xef\x83\xb3 ",
 }
 
