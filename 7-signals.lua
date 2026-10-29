@@ -88,28 +88,6 @@ client.connect_signal("unfocus", function(c)
     end)
 end)
 
-client.connect_signal("property::maximized", function(c)
-    if not c.valid or not c.maximized then
-        return
-    end
-
-    for _, t in ipairs(c:tags()) do
-        local maximized_clients = {}
-        for _, tagged_client in ipairs(t:clients()) do
-            if tagged_client.valid and tagged_client.maximized then
-                table.insert(maximized_clients, tagged_client)
-            end
-        end
-
-        if #maximized_clients >= 2 then
-            for _, maximized_client in ipairs(maximized_clients) do
-                maximized_client.maximized = false
-            end
-            return
-        end
-    end
-end)
-
 tag.connect_signal("property::selected", function(t)
     focus_last_client(t)
 end)
