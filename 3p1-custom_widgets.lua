@@ -284,15 +284,13 @@ widgets.focuswidget:add(focus_text)
 
 local function update_focus_widget()
     local focused = client.focus
-    if not focused then
-        focus_icon.visible = false
-        focus_text:set_markup("")
+    if not focused or not focused.name then
+        focus_image:set_image(nil)
+        focus_text:set_text("")
         return
     end
-    local client_title = focused.name
     focus_image:set_image(focused.icon and focused.icon or beautiful.awesome_icon)
-    focus_icon.visible = focused.icon ~= nil
-    focus_text:set_markup(string.format(" %s ", gears.string.xml_escape(client_title)))
+    focus_text:set_markup(string.format(" %s", gears.string.xml_escape(focused.name)))
 end
 
 client.connect_signal("focus", update_focus_widget)

@@ -7,7 +7,7 @@ local themes_path = gfs.get_themes_dir()
 
 local theme = {}
 
-theme.wallpaper = os.getenv("HOME") .. "/Pictures/Wallpapers/Kamisato Ayaka.png"
+theme.wallpaper = os.getenv("HOME") .. "/Pictures/Wallpapers/_.png"
 
 theme.average_color = function(multiplier)
     multiplier = multiplier or 1.0
