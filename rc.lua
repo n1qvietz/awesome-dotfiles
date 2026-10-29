@@ -10,3 +10,4 @@ require("5-key_bindings")          -- file:///home/nqvietz/.config/awesome/5-key
 require("6-rules")                 -- file:///home/nqvietz/.config/awesome/6-rules.lua
 require("7-signals")               -- file:///home/nqvietz/.config/awesome/7-signals.lua
 --> require("theme")               -- file:///home/nqvietz/.config/awesome/theme.lua
+--> Original rc.lua                -- file:///etc/xdg/awesome/rc.lua

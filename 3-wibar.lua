@@ -3,9 +3,8 @@ local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
 local xresources = require("beautiful.xresources")
-local widgets = require("3p1-custom_widgets")          -- file:///home/nqvietz/.config/awesome/3p1-custom_widgets.lua
-local icons = require("3p2-custom_icons")              -- file:///home/nqvietz/.config/awesome/3p2-custom_icons.lua
-local dpi = xresources.apply_dpi
+local widgets = require("3p1-custom_widgets")      -- file:///home/nqvietz/.config/awesome/3p1-custom_widgets.lua
+local icons = require("3p2-custom_icons")          -- file:///home/nqvietz/.config/awesome/3p2-custom_icons.lua
 
 -- {{{ Wibar
 -- Create a wibox for each screen and add it
@@ -45,12 +44,7 @@ awful.screen.connect_for_each_screen(function(s)
     -- Wallpaper
     set_wallpaper(s)
 
-    s.padding = {
-        top = dpi(2),
-        right = dpi(2),
-        bottom = dpi(2),
-        left = dpi(2),
-    }
+    s.padding = { top = 2, right = 2, bottom = 2, left = 2 }
 
     -- Each screen has its own tag table.
     awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.suit.fair)
