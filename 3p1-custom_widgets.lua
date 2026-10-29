@@ -223,14 +223,14 @@ widgets.clipwidget = awful.widget.watch(
     "xclip -o -selection clipboard",
     1,
     function(widget, stdout)
-        local clipboard_content = stdout:gsub("\n", "")
+        local clipboard_content = stdout:gsub("%s+", " "):match("^%s*(.-)%s*$")
         local clipboard_icon = ""
         if clipboard_content == "" then
             clipboard_icon = colored_icon(icons.clipboard, "#ffffff")
             clipboard_content = "Clipboard empty"
         else
             clipboard_icon = colored_icon(icons.clipboard, "#ffff00")
-            clipboard_content = truncate(clipboard_content)
+            clipboard_content = gears.string.xml_escape(truncate(clipboard_content))
         end
         widget:set_markup(string.format(" %s%s", clipboard_icon, clipboard_content))
     end,
@@ -238,7 +238,8 @@ widgets.clipwidget = awful.widget.watch(
 )
 
 -- Focusing widget
-local focus_icon = wibox.widget.imagebox()
+local focus_image = wibox.widget.imagebox()
+local focus_icon = wibox.container.margin(focus_image, 2, 0, 0, 0)
 local focus_text = wibox.widget.textbox()
 widgets.focuswidget = wibox.layout.fixed.horizontal()
 widgets.focuswidget:add(focus_icon)
@@ -252,18 +253,37 @@ local function update_focus_widget()
         return
     end
     local client_title = focused.name
-    focus_icon:set_image(focused.icon and focused.icon or " • ")
+    focus_image:set_image(focused.icon and focused.icon or beautiful.awesome_icon)
     focus_icon.visible = focused.icon ~= nil
-    focus_text:set_markup(string.format(
-        " %s ",
-        gears.string.xml_escape(client_title)
-    ))
+    focus_text:set_markup(string.format(" %s ", gears.string.xml_escape(client_title)))
 end
 
 client.connect_signal("focus", update_focus_widget)
 client.connect_signal("unfocus", update_focus_widget)
 client.connect_signal("property::name", update_focus_widget)
 update_focus_widget()
+
+-- Tasklist widget
+function widgets.taskwidget(screen)
+    return awful.widget.tasklist {
+        screen = screen,
+        filter = awful.widget.tasklist.filter.currenttags,
+        buttons = {
+            awful.button({ }, 1, function (c)
+                c:activate { context = "tasklist", action = "toggle_minimization" }
+            end),
+            awful.button({ }, 3, function() awful.menu.client_list { theme = { width = 250 } } end),
+            awful.button({ }, 4, function() awful.client.focus.byidx(-1) end),
+            awful.button({ }, 5, function() awful.client.focus.byidx( 1) end),
+        },
+        widget_template = { { { {
+            id = "icon_role", widget = wibox.widget.imagebox, },
+            margins = 2, widget = wibox.container.margin, },
+            id = "background_role", widget = wibox.container.background, },
+            layout = wibox.layout.fixed.horizontal,
+        },
+    }
+end
 
 return widgets
 

@@ -88,13 +88,6 @@ client.connect_signal("unfocus", function(c)
     end)
 end)
 
-client.connect_signal("property::minimized", function(c)
-    if c.minimized then
-        c.minimized = false
-        c:emit_signal("request::activate", "minimize_rejected", {raise = true})
-    end
-end)
-
 client.connect_signal("property::maximized", function(c)
     if not c.valid or not c.maximized then
         return
