@@ -2,8 +2,8 @@ local awful = require("awful")
 local beautiful = require("beautiful")
 local gears = require("gears")
 
-local client_shape = function(cr, width, height)
-    gears.shape.rounded_rect(cr, width, height, 12)
+local clientshape = function(cr, width, height)
+    gears.shape.rounded_rect(cr, width, height, 18)
 end
 
 -- {{{ Rules
@@ -13,7 +13,7 @@ awful.rules.rules = {
     { rule = { },
       properties = { border_width = beautiful.border_width,
                      border_color = beautiful.border_normal,
-                     shape = client_shape,
+                     shape = clientshape,
                      focus = awful.client.focus.filter,
                      raise = true,
                      keys = clientkeys,
