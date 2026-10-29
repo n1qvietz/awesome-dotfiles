@@ -75,7 +75,6 @@ vicious.register(
 
 -- Battery widget
 widgets.batwidget = wibox.widget.textbox()
-widgets.batwidget:set_font(icon_font)
 vicious.register(
     widgets.batwidget,
     vicious.widgets.bat,
