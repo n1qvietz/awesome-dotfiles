@@ -78,6 +78,7 @@ awful.screen.connect_for_each_screen(function(s)
             widgets.memwidget,
             widgets.netwidget,
             widgets.diskwidget,
+            widgets.voicewidget,
             widgets.volwidget,
             widgets.brightwidget,
             widgets.batwidget,

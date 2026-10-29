@@ -67,6 +67,10 @@ local customkeys = gears.table.join(
         "amixer set Master 5%+ && amixer set Master unmute"
     ) end, { description = "raise volume", group = "audio" }),
 
+    -- Voice control
+    awful.key({ "Control" }, "XF86AudioMute", function() awful.spawn("amixer set Capture toggle")
+    end, { description = "mute/unmute microphone", group = "audio" }),
+
     -- Brightness control
     awful.key({ }, "XF86MonBrightnessUp", function() awful.spawn("brightnessctl set +5%")
     end, { description = "increase brightness", group = "brightness" }),

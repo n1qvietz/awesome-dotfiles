@@ -237,6 +237,44 @@ widgets.clipwidget = awful.widget.watch(
     wibox.widget.textbox()
 )
 
+-- Voice widget
+widgets.voicewidget = awful.widget.watch(
+    "amixer get Capture",
+    0.05,
+    function(widget, stdout)
+        local voice_icon = ""
+        if stdout:match("%[off%]") then
+            voice_icon = colored_icon(icons.voice_mute, "#ff0000")
+        else
+            voice_icon = colored_icon(icons.voice, "#00ff00")
+        end
+        widget:set_markup(string.format(" %s", voice_icon))
+    end,
+    wibox.widget.textbox()
+)
+
+-- Tasklist widget
+function widgets.taskwidget(screen)
+    return awful.widget.tasklist {
+        screen = screen,
+        filter = awful.widget.tasklist.filter.currenttags,
+        buttons = {
+            awful.button({ }, 1, function (c)
+                c:activate { context = "tasklist", action = "toggle_minimization" }
+            end),
+            awful.button({ }, 3, function() awful.menu.client_list { theme = { width = 250 } } end),
+            awful.button({ }, 4, function() awful.client.focus.byidx(-1) end),
+            awful.button({ }, 5, function() awful.client.focus.byidx( 1) end),
+        },
+        widget_template = { { { {
+            id = "icon_role", widget = wibox.widget.imagebox, },
+            margins = 2, widget = wibox.container.margin, },
+            id = "background_role", widget = wibox.container.background, },
+            layout = wibox.layout.fixed.horizontal,
+        },
+    }
+end
+
 -- Focusing widget
 local focus_image = wibox.widget.imagebox()
 local focus_icon = wibox.container.margin(focus_image, 2, 0, 0, 0)
@@ -263,31 +301,10 @@ client.connect_signal("unfocus", update_focus_widget)
 client.connect_signal("property::name", update_focus_widget)
 update_focus_widget()
 
--- Tasklist widget
-function widgets.taskwidget(screen)
-    return awful.widget.tasklist {
-        screen = screen,
-        filter = awful.widget.tasklist.filter.currenttags,
-        buttons = {
-            awful.button({ }, 1, function (c)
-                c:activate { context = "tasklist", action = "toggle_minimization" }
-            end),
-            awful.button({ }, 3, function() awful.menu.client_list { theme = { width = 250 } } end),
-            awful.button({ }, 4, function() awful.client.focus.byidx(-1) end),
-            awful.button({ }, 5, function() awful.client.focus.byidx( 1) end),
-        },
-        widget_template = { { { {
-            id = "icon_role", widget = wibox.widget.imagebox, },
-            margins = 2, widget = wibox.container.margin, },
-            id = "background_role", widget = wibox.container.background, },
-            layout = wibox.layout.fixed.horizontal,
-        },
-    }
-end
-
 return widgets
 
 -- file:///home/nqvietz/.config/awesome/3-wibar.lua
+-- file:///home/nqvietz/.config/awesome/3p2-custom_icons.lua
 
 -- Remaining: notification widget.
 -- Add the popup widget for each widget.
