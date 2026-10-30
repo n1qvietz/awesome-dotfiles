@@ -42,6 +42,7 @@ local function wallpaper_average()
     return red / pixel_count, green / pixel_count, blue / pixel_count
 end
 
+-- Calculate the average color of the wallpaper
 local average_red, average_green, average_blue = wallpaper_average()
 
 theme.average_color = function(multiplier)
@@ -58,14 +59,14 @@ theme.average_color = function(multiplier)
     )
 end
 
-theme.font          = "Maple Mono NF CN 8",
+theme.font          = "Maple Mono NF CN 8"
 
 theme.bg_normal     = theme.average_color(0.5) or "#222222"
 theme.bg_focus      = theme.average_color(1.2) or "#535d6c"
 theme.bg_urgent     = theme.average_color(1.2) or "#ff0000"
 theme.bg_minimize   = theme.bg_normal or "#444444"
 theme.bg_systray    = theme.bg_normal
-theme.hotkeys_bg    = theme.average_color(0.5) or "#535d6c"t
+theme.hotkeys_bg    = theme.average_color(0.5) or "#535d6c"
 
 theme.fg_normal     = "#aaaaaa"
 theme.fg_focus      = "#ffffff"
