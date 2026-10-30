@@ -73,6 +73,56 @@ vicious.register(
     1
 )
 
+-- Bluetooth widget
+widgets.btwidget = awful.widget.watch(
+    "bluetoothctl show",
+    0.05,
+    function(widget, stdout)
+        local bt_icon = ""
+        if stdout:match("Powered: yes") then
+            bt_icon = colored_icon(icons.bluetooth, "#0082fc")
+        else
+            bt_icon = colored_icon(icons.bluetooth, "#ffffff")
+        end
+        widget:set_markup(string.format(" %s", bt_icon))
+    end,
+    wibox.widget.textbox()
+)
+
+widgets.btwidget:buttons(gears.table.join(
+    awful.button({ }, 1, function()
+        awful.spawn.easy_async(
+            "bluetoothctl show",
+            function(stdout, stderr, _, exit_code)
+                if exit_code ~= 0 then
+                    naughty.notify({
+                        title = "Bluetooth",
+                        text = stderr ~= "" and stderr
+                            or "Unable to read Bluetooth state",
+                    })
+                    return
+                end
+
+                awful.spawn.easy_async(
+                    stdout:match("Powered: yes")
+                        and "bluetoothctl power off"
+                        or "bluetoothctl power on",
+                    function(_, command_stderr, _, command_exit_code)
+                        if command_exit_code ~= 0 then
+                            naughty.notify({
+                                title = "Bluetooth",
+                                text = command_stderr ~= ""
+                                    and command_stderr
+                                    or "Unable to change Bluetooth power state",
+                            })
+                        end
+                    end
+                )
+            end
+        )
+    end)
+))
+
 -- Battery widget
 widgets.batwidget = wibox.widget.textbox()
 vicious.register(
@@ -278,9 +328,7 @@ end
 local focus_image = wibox.widget.imagebox()
 local focus_icon = wibox.container.margin(focus_image, 2, 0, 0, 0)
 local focus_text = wibox.widget.textbox()
-widgets.focuswidget = wibox.layout.fixed.horizontal()
-widgets.focuswidget:add(focus_icon)
-widgets.focuswidget:add(focus_text)
+widgets.focuswidget = wibox.layout.fixed.horizontal(focus_icon, focus_text)
 
 local function update_focus_widget()
     local focused = client.focus

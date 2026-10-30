@@ -11,3 +11,4 @@ require("6-rules")                 -- file:///home/nqvietz/.config/awesome/6-rul
 require("7-signals")               -- file:///home/nqvietz/.config/awesome/7-signals.lua
 --> require("theme")               -- file:///home/nqvietz/.config/awesome/theme.lua
 --> Original rc.lua                -- file:///etc/xdg/awesome/rc.lua
+--> Startup applications           -- file:///home/nqvietz/.xinitrc
