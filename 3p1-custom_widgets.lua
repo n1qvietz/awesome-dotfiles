@@ -344,6 +344,7 @@ end
 client.connect_signal("focus", update_focus_widget)
 client.connect_signal("unfocus", update_focus_widget)
 client.connect_signal("property::name", update_focus_widget)
+client.connect_signal("property::icon", update_focus_widget)
 update_focus_widget()
 
 return widgets

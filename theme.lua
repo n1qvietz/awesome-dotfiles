@@ -9,8 +9,7 @@ local theme = {}
 
 theme.wallpaper = os.getenv("HOME") .. "/Pictures/Wallpapers/_.png"
 
-theme.average_color = function(multiplier)
-    multiplier = multiplier or 1.0
+local function wallpaper_average()
     local pixbuf, err = require("lgi").GdkPixbuf.Pixbuf.new_from_file(theme.wallpaper)
 
     if not pixbuf then
@@ -40,25 +39,33 @@ theme.average_color = function(multiplier)
     end
 
     local pixel_count = width * height
-    red = red * multiplier
-    green = green * multiplier
-    blue = blue * multiplier
+    return red / pixel_count, green / pixel_count, blue / pixel_count
+end
+
+local average_red, average_green, average_blue = wallpaper_average()
+
+theme.average_color = function(multiplier)
+    if not average_red then
+        return nil
+    end
+
+    multiplier = multiplier or 1.0
     return string.format(
         "#%02x%02x%02x",
-        math.floor(red / pixel_count + 0.5),
-        math.floor(green / pixel_count + 0.5),
-        math.floor(blue / pixel_count + 0.5)
+        math.floor(average_red * multiplier + 0.5),
+        math.floor(average_green * multiplier + 0.5),
+        math.floor(average_blue * multiplier + 0.5)
     )
 end
 
-theme.font          = "Maple Mono NF CN 8"
+theme.font          = "Maple Mono NF CN 8",
 
 theme.bg_normal     = theme.average_color(0.5) or "#222222"
 theme.bg_focus      = theme.average_color(1.2) or "#535d6c"
 theme.bg_urgent     = theme.average_color(1.2) or "#ff0000"
 theme.bg_minimize   = theme.bg_normal or "#444444"
 theme.bg_systray    = theme.bg_normal
-theme.hotkeys_bg    = theme.average_color(0.8) or "#535d6c"
+theme.hotkeys_bg    = theme.average_color(0.5) or "#535d6c"t
 
 theme.fg_normal     = "#aaaaaa"
 theme.fg_focus      = "#ffffff"
