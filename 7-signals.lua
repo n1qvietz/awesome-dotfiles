@@ -3,6 +3,8 @@ local beautiful = require("beautiful")
 local gears = require("gears")
 local focus_history_by_tag = {}
 
+-- {{{ Signals
+--- Remove a client from the focus history of a tag
 local function remove_from_history(history, c)
     for index, history_client in ipairs(history) do
         if history_client == c then
@@ -12,6 +14,7 @@ local function remove_from_history(history, c)
     end
 end
 
+--- Focus the last client in the focus history of a tag, excluding a specific client
 local function focus_last_client(t, excluded)
     if not t.selected then
         return
@@ -50,7 +53,6 @@ local function focus_last_client(t, excluded)
     end)
 end
 
--- {{{ Signals
 -- Signal function to execute when a new client appears.
 client.connect_signal("manage", function (c)
     -- Set the windows at the slave,
