@@ -5,7 +5,7 @@ local themes_path = require("gears.filesystem").get_themes_dir()
 
 local theme = {}
 
-theme.wallpaper = os.getenv("HOME") .. "/Pictures/Wallpapers/Kamisato Ayaka.png"
+theme.wallpaper = os.getenv("HOME") .. "/Pictures/Wallpapers/_.png"
 
 local function wallpaper_average()
     local pixbuf, err = require("lgi").GdkPixbuf.Pixbuf.new_from_file(theme.wallpaper)
@@ -40,7 +40,7 @@ local function wallpaper_average()
     return red / pixel_count, green / pixel_count, blue / pixel_count
 end
 
--- local init_color, average_red, average_green, average_blue = "#99b1d9"
+local init_color, average_red, average_green, average_blue = "#99b1d9"
 
 if init_color then
     average_red, average_green, average_blue = string.match(
