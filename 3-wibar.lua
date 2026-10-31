@@ -68,7 +68,7 @@ awful.screen.connect_for_each_screen(function(s)
             widgets.clipwidget,
             widgets.musicwidget,
             widgets.taskwidget(s),
-            -- widgets.focuswidget,
+            widgets.focuswidget,
         },
         wibox.widget.textbox(), -- Middle space
         { -- Right widgets
