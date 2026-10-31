@@ -64,6 +64,7 @@ awful.screen.connect_for_each_screen(function(s)
         { -- Left widgets
             layout = wibox.layout.fixed.horizontal,
             s.mytaglist,
+            -- widgets.average_color,
             widgets.clipwidget,
             widgets.musicwidget,
             widgets.taskwidget(s),

@@ -31,6 +31,9 @@ local function truncate(str, length)
     end
 end
 
+-- Average color widget
+widgets.average_color = wibox.widget.textbox(beautiful.average_color())
+
 -- Ram usage widget
 widgets.memwidget = wibox.widget.textbox()
 vicious.cache(vicious.widgets.mem)

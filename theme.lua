@@ -1,13 +1,11 @@
 local theme_assets = require("beautiful.theme_assets")
 local xresources = require("beautiful.xresources")
 local dpi = xresources.apply_dpi
-
-local gfs = require("gears.filesystem")
-local themes_path = gfs.get_themes_dir()
+local themes_path = require("gears.filesystem").get_themes_dir()
 
 local theme = {}
 
-theme.wallpaper = os.getenv("HOME") .. "/Pictures/Wallpapers/_.png"
+theme.wallpaper = os.getenv("HOME") .. "/Pictures/Wallpapers/Kamisato Ayaka.png"
 
 local function wallpaper_average()
     local pixbuf, err = require("lgi").GdkPixbuf.Pixbuf.new_from_file(theme.wallpaper)
@@ -42,43 +40,67 @@ local function wallpaper_average()
     return red / pixel_count, green / pixel_count, blue / pixel_count
 end
 
--- Calculate the average color of the wallpaper
-local average_red, average_green, average_blue = wallpaper_average()
+-- local init_color, average_red, average_green, average_blue = "#99b1d9"
+
+if init_color then
+    average_red, average_green, average_blue = string.match(
+        init_color,
+        "#(%x%x)(%x%x)(%x%x)"
+    )
+    average_red = tonumber(average_red, 16)
+    average_green = tonumber(average_green, 16)
+    average_blue = tonumber(average_blue, 16)
+else
+    average_red, average_green, average_blue = wallpaper_average()
+end
 
 theme.average_color = function(multiplier)
-    if not average_red then
-        return nil
+    multiplier = multiplier or 1.0
+    local function channel(value)
+        return math.min(255, math.floor(value * multiplier + 0.5))
     end
 
-    multiplier = multiplier or 1.0
     return string.format(
         "#%02x%02x%02x",
-        math.floor(average_red * multiplier + 0.5),
-        math.floor(average_green * multiplier + 0.5),
-        math.floor(average_blue * multiplier + 0.5)
+        channel(average_red),
+        channel(average_green),
+        channel(average_blue)
     )
 end
 
 theme.font          = "Maple Mono NF CN 8"
 
 theme.bg_normal     = theme.average_color(0.5) or "#222222"
-theme.bg_focus      = theme.average_color(1.2) or "#535d6c"
-theme.bg_urgent     = theme.average_color(1.2) or "#ff0000"
+theme.bg_focus      = theme.average_color() or "#535d6c"
+theme.bg_urgent     = theme.average_color() or "#ff0000"
 theme.bg_minimize   = theme.bg_normal or "#444444"
 theme.bg_systray    = theme.bg_normal
-theme.hotkeys_bg    = theme.average_color(0.5) or "#535d6c"
+theme.hotkeys_bg    = theme.average_color(0.75) or "#535d6c"
 
-theme.fg_normal     = "#aaaaaa"
-theme.fg_focus      = "#ffffff"
-theme.fg_urgent     = "#ffffff"
-theme.fg_minimize   = "#ffffff"
+theme.contrast_color = function(target_color)
+    target_color = target_color or theme.average_color()
+    local avg_red, avg_green, avg_blue = string.match(
+        target_color,
+        "#(%x%x)(%x%x)(%x%x)"
+    )
+    avg_red = tonumber(avg_red, 16)
+    avg_green = tonumber(avg_green, 16)
+    avg_blue = tonumber(avg_blue, 16)
+    local avg_color = math.floor(255.5 - (avg_red + avg_green + avg_blue) / 3)
+    return string.format("#%02x%02x%02x", avg_color, avg_color, avg_color)
+end
+
+theme.fg_normal     = theme.contrast_color(theme.bg_normal) or "#aaaaaa"
+theme.fg_focus      = theme.contrast_color(theme.bg_focus) or "#ffffff"
+theme.fg_urgent     = theme.contrast_color(theme.bg_urgent) or "#ffffff"
+theme.fg_minimize   = theme.contrast_color(theme.bg_minimize) or "#ffffff"
 theme.hotkeys_modifiers_fg = theme.fg_focus
 
 theme.useless_gap   = dpi(2)
 theme.border_width  = dpi(2)
-theme.border_normal = theme.average_color(0.8) or "#000000"
+theme.border_normal = theme.bg_normal or "#000000"
 theme.border_focus  = theme.bg_focus or "#535d6c"
-theme.border_marked = theme.average_color(1.2) or "#91231c"
+theme.border_marked = theme.average_color() or "#91231c"
 
 -- There are other variable sets
 -- overriding the default one when
