@@ -6,7 +6,7 @@ require("3-wibar")                 -- file:///home/nqvietz/.config/awesome/3-wib
 --> require("3p2-custom_icons")    -- file:///home/nqvietz/.config/awesome/3p2-custom_icons.lua
 require("4-mouse_bindings")        -- file:///home/nqvietz/.config/awesome/4-mouse_bindings.lua
 require("5-key_bindings")          -- file:///home/nqvietz/.config/awesome/5-key_bindings.lua
---> require("5p1-custom_bindings") -- file:///home/nqvietz/.config/awesome/5p1-custom_bindings.lua
+require("5p1-custom_bindings")     -- file:///home/nqvietz/.config/awesome/5p1-custom_bindings.lua
 require("6-rules")                 -- file:///home/nqvietz/.config/awesome/6-rules.lua
 require("7-signals")               -- file:///home/nqvietz/.config/awesome/7-signals.lua
 --> require("theme")               -- file:///home/nqvietz/.config/awesome/theme.lua

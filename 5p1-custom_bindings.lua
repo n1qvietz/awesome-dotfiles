@@ -34,7 +34,7 @@ local function take_screenshot(opts)
     end
 end
 
-local customkeys = gears.table.join(
+awful.keyboard.append_global_keybindings({
     -- Launchers
     awful.key({ modkey }, "space", function() awful.spawn("rofi -show drun")
     end, { description = "open Rofi application launcher", group = "launcher" }),
@@ -56,8 +56,6 @@ local customkeys = gears.table.join(
     -- Client manipulation
     awful.key({ modkey }, "q", function() if client.focus then client.focus:kill() end
     end, { description = "close focused window", group = "client" }),
-    awful.key({ modkey }, "Tab", function () awful.spawn("rofi -show window")
-    end, { description = "switch windows", group = "client" }),
 
     -- Audio control
     awful.key({ }, "XF86AudioMute", function() awful.spawn("amixer set Master toggle")
@@ -102,6 +100,4 @@ local customkeys = gears.table.join(
     awful.key({ modkey, "Shift" }, "s", function()
         take_screenshot({ interactive = true, title = "Area" })
     end, { description = "take a screenshot of selected area", group = "screenshot" })
-)
-
-return customkeys
+})

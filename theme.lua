@@ -75,7 +75,7 @@ theme.bg_focus      = theme.average_color() or "#535d6c"
 theme.bg_urgent     = theme.average_color() or "#ff0000"
 theme.bg_minimize   = theme.bg_normal or "#444444"
 theme.bg_systray    = theme.bg_normal
-theme.hotkeys_bg    = theme.average_color(0.75) or "#535d6c"
+theme.hotkeys_bg    = theme.average_color(0.5) or "#535d6c"
 
 theme.contrast_color = function(target_color)
     target_color = target_color or theme.average_color()
