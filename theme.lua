@@ -1,5 +1,6 @@
 local theme_assets = require("beautiful.theme_assets")
 local xresources = require("beautiful.xresources")
+local rnotification = require("ruled").notification
 local dpi = xresources.apply_dpi
 local themes_path = require("gears.filesystem").get_themes_dir()
 
@@ -20,7 +21,7 @@ local function wallpaper_average()
     local rowstride = pixbuf:get_rowstride()
     local pixels = pixbuf:get_pixels()
 
-    if width * height == 0 or not pixels then
+    if width * height == 0 or type(pixels) ~= "string" then
         return nil, "Wallpaper contains no pixels: " .. theme.wallpaper
     end
 
@@ -40,9 +41,9 @@ local function wallpaper_average()
     return red / pixel_count, green / pixel_count, blue / pixel_count
 end
 
-local init_color, average_red, average_green, average_blue = "#99b1d9"
+-- local init_color, average_red, average_green, average_blue = "#99b1d9"
 
-if init_color then
+if type(init_color) == "string" then
     average_red, average_green, average_blue = string.match(
         init_color,
         "#(%x%x)(%x%x)(%x%x)"
@@ -75,7 +76,7 @@ theme.bg_focus      = theme.average_color() or "#535d6c"
 theme.bg_urgent     = theme.average_color() or "#ff0000"
 theme.bg_minimize   = theme.bg_normal or "#444444"
 theme.bg_systray    = theme.bg_normal
-theme.hotkeys_bg    = theme.average_color(0.5) or "#535d6c"
+theme.hotkeys_bg    = theme.bg_normal or "#535d6c"
 
 theme.contrast_color = function(target_color)
     target_color = target_color or theme.average_color()
@@ -150,6 +151,14 @@ theme.awesome_icon = theme_assets.awesome_icon(
 -- Define the icon theme for application icons. If not set then the icons
 -- from /usr/share/icons and /usr/share/icons/hicolor will be used.
 theme.icon_theme = nil
+
+-- Set different colors for urgent notifications.
+rnotification.connect_signal('request::rules', function()
+    rnotification.append_rule {
+        rule       = { urgency = 'critical' },
+        properties = { bg = '#ff0000', fg = '#ffffff' }
+    }
+end)
 
 return theme
 
