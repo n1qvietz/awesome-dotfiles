@@ -341,7 +341,7 @@ local function update_focus_widget()
         return
     end
     focus_image:set_image(focused.icon and focused.icon or beautiful.awesome_icon)
-    focus_text:set_markup(string.format(" %s", gears.string.xml_escape(focused.name)))
+    focus_text:set_markup(truncate(string.format(" %s", gears.string.xml_escape(focused.name)),75))
 end
 
 client.connect_signal("focus", update_focus_widget)

@@ -1,8 +1,8 @@
 local awful = require("awful")
 local wibox = require("wibox")
 local beautiful = require("beautiful")
-local widgets = require("3p1-custom_widgets")      -- file:///home/nqvietz/.config/awesome/3p1-custom_widgets.lua
-local icons = require("3p2-custom_icons")          -- file:///home/nqvietz/.config/awesome/3p2-custom_icons.lua
+local widgets = require("3p1-custom_widgets") -- file:///home/nqvietz/.config/awesome/3p1-custom_widgets.lua
+local icons = require("3p2-custom_icons")     -- file:///home/nqvietz/.config/awesome/3p2-custom_icons.lua
 
 -- {{{ Wallpaper
 screen.connect_signal("request::wallpaper", function(s)

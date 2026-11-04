@@ -41,7 +41,7 @@ local function wallpaper_average()
     return red / pixel_count, green / pixel_count, blue / pixel_count
 end
 
--- local init_color, average_red, average_green, average_blue = "#99b1d9"
+local init_color, average_red, average_green, average_blue = "#99b1d9"
 
 if type(init_color) == "string" then
     average_red, average_green, average_blue = string.match(
