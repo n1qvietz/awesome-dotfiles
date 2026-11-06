@@ -79,7 +79,7 @@ vicious.register(
 -- Bluetooth widget
 widgets.btwidget = awful.widget.watch(
     "bluetoothctl show",
-    0.05,
+    2,
     function(widget, stdout)
         local bt_icon = ""
         if stdout:match("Powered: yes") then
@@ -213,14 +213,14 @@ vicious.register(
         end
         return string.format(" %s%s", volume_icon, volume)
     end,
-    0.05,
+    0.5,
     "Master"
 )
 
 -- Brightness widget
 widgets.brightwidget = awful.widget.watch(
     "brightnessctl -m",
-    0.05,
+    1,
     function(widget, stdout)
         local brightness = stdout:match("^[^,]*,[^,]*,[^,]*,([^,]+)")
         local brightness_icon = ""
@@ -249,7 +249,7 @@ widgets.clockwidget = wibox.widget.textclock(
 -- Music widget
 widgets.musicwidget = awful.widget.watch(
     "playerctl metadata --player=spotify --format '{{ status }}|{{ volume }}|{{ artist }} - {{ title }}'",
-    0.05,
+    1,
     function(widget, stdout)
         local music_info = stdout:gsub("\n", "")
         local status, raw_volume, track_info = music_info:match("^(.-)|(.-)|(.*)$")
@@ -292,7 +292,7 @@ widgets.clipwidget = awful.widget.watch(
 -- Voice widget
 widgets.voicewidget = awful.widget.watch(
     "amixer get Capture",
-    0.05,
+    1,
     function(widget, stdout)
         local voice_icon = ""
         if stdout:match("%[off%]") then
