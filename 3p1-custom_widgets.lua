@@ -72,7 +72,8 @@ vicious.register(
             ram_icon,
             usage,
             fix(data[2], 2),
-            fix(data[3], 2))
+            fix(data[3], 2)
+        )
     end,
     1
 )
