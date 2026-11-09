@@ -8,6 +8,27 @@ local icons = require("3p2-custom_icons") -- file:///home/nqvietz/.config/awesom
 
 local widgets = {}
 
+local function watch(command, interval, callback, widget)
+    local running = false
+    local timer = gears.timer({ timeout = interval })
+
+    timer:connect_signal("timeout", function()
+        if running then
+            return
+        end
+
+        running = true
+        awful.spawn.easy_async_with_shell(command, function(stdout)
+            running = false
+            callback(widget, stdout)
+        end)
+    end)
+
+    timer:start()
+    timer:emit_signal("timeout")
+    return widget
+end
+
 local function fix(usage, unit_level)
     usage = tonumber(usage) or 0
     local units = { "B", "K", "M", "G", "T", "P", "E", "Z", "Y" }
@@ -25,10 +46,9 @@ end
 local function truncate(str, length)
     length = tonumber(length) or 25
     if #str > length then
-        return str:sub(1, length - 4) .. " ..."
-    else
-        return str
+        return str:sub(1, utf8.offset(str, length - 4)) .. " ..."
     end
+    return str
 end
 
 -- Average color widget
@@ -36,7 +56,6 @@ widgets.average_color = wibox.widget.textbox(beautiful.average_color())
 
 -- Ram usage widget
 widgets.memwidget = wibox.widget.textbox()
-vicious.cache(vicious.widgets.mem)
 vicious.register(
     widgets.memwidget,
     vicious.widgets.mem,
@@ -77,7 +96,7 @@ vicious.register(
 )
 
 -- Bluetooth widget
-widgets.btwidget = awful.widget.watch(
+widgets.btwidget = watch(
     "bluetoothctl show",
     0.05,
     function(widget, stdout)
@@ -218,7 +237,7 @@ vicious.register(
 )
 
 -- Brightness widget
-widgets.brightwidget = awful.widget.watch(
+widgets.brightwidget = watch(
     "brightnessctl -m",
     0.05,
     function(widget, stdout)
@@ -247,50 +266,47 @@ widgets.clockwidget = wibox.widget.textclock(
 )
 
 -- Music widget
-widgets.musicwidget = awful.widget.watch(
-    "playerctl metadata --player=spotify --format '{{ status }}|{{ volume }}|{{ artist }} - {{ title }}'",
+widgets.musicwidget = watch(
+    "playerctl --player=spotify metadata --format '{{ status }}|{{ volume }}|{{ artist }} - {{ title }}'",
     0.05,
     function(widget, stdout)
-        local music_info = stdout:gsub("\n", "")
-        local status, raw_volume, track_info = music_info:match("^(.-)|(.-)|(.*)$")
-        local music_icon = ""
-        local music_text = ""
+        local status, raw_volume, track_info = stdout:gsub("\n", ""):match("^(.-)|(.-)|(.*)$")
+        local music_icon, music_text = colored_icon(icons.music, "#ff0000"), "No music playing"
         if status == "Playing" then
             music_icon = colored_icon(icons.playing, "#00ff00")
             music_text = string.format("%s %.0f%%", truncate(track_info), tonumber(raw_volume) * 100)
         elseif status == "Paused" then
             music_icon = colored_icon(icons.paused, "#ffff00")
             music_text = string.format("%s %.0f%%", truncate(track_info), tonumber(raw_volume) * 100)
-        else
-            music_icon = colored_icon(icons.music, "#ff0000")
-            music_text = "No music playing"
         end
+        music_text = gears.string.xml_escape(music_text)
         widget:set_markup(string.format(" %s%s ", music_icon, music_text))
     end,
     wibox.widget.textbox()
 )
 
 -- Clipboard widget
-widgets.clipwidget = awful.widget.watch(
+widgets.clipwidget = watch(
     "xclip -o -selection clipboard",
     1,
     function(widget, stdout)
-        local clipboard_content = stdout:gsub("%s+", " "):match("^%s*(.-)%s*$")
+        local clipboard_content = stdout:match("^%s*(.-)%s*$")
         local clipboard_icon = ""
         if clipboard_content == "" then
             clipboard_icon = colored_icon(icons.clipboard, "#ffffff")
             clipboard_content = "Clipboard empty"
-        else
+        elseif type(clipboard_content) == "string" then
             clipboard_icon = colored_icon(icons.clipboard, "#00ff00")
-            clipboard_content = gears.string.xml_escape(truncate(clipboard_content))
+            clipboard_content = truncate(clipboard_content)
         end
+        clipboard_content = gears.string.xml_escape(clipboard_content)
         widget:set_markup(string.format(" %s%s", clipboard_icon, clipboard_content))
     end,
     wibox.widget.textbox()
 )
 
 -- Voice widget
-widgets.voicewidget = awful.widget.watch(
+widgets.voicewidget = watch(
     "amixer get Capture",
     0.05,
     function(widget, stdout)
@@ -329,7 +345,7 @@ end
 
 -- Focusing widget
 local focus_image = wibox.widget.imagebox()
-local focus_icon = wibox.container.margin(focus_image, 2, 0, 0, 0)
+local focus_icon = wibox.container.margin(focus_image, 2, 2, 0, 0)
 local focus_text = wibox.widget.textbox()
 widgets.focuswidget = wibox.layout.fixed.horizontal(focus_icon, focus_text)
 
@@ -341,7 +357,7 @@ local function update_focus_widget()
         return
     end
     focus_image:set_image(focused.icon and focused.icon or beautiful.awesome_icon)
-    focus_text:set_markup(truncate(string.format(" %s", gears.string.xml_escape(focused.name)),75))
+    focus_text:set_markup(gears.string.xml_escape(truncate(string.format("%s", focused.name), 75)))
 end
 
 client.connect_signal("focus", update_focus_widget)
