@@ -9,24 +9,7 @@ local icons = require("3p2-custom_icons") -- file:///home/nqvietz/.config/awesom
 local widgets = {}
 
 local function watch(command, interval, callback, widget)
-    local running = false
-    local timer = gears.timer({ timeout = interval })
-
-    timer:connect_signal("timeout", function()
-        if running then
-            return
-        end
-
-        running = true
-        awful.spawn.easy_async_with_shell(command, function(stdout)
-            running = false
-            callback(widget, stdout)
-        end)
-    end)
-
-    timer:start()
-    timer:emit_signal("timeout")
-    return widget
+    return awful.widget.watch(command, interval, callback, widget)
 end
 
 local function fix(usage, unit_level)
